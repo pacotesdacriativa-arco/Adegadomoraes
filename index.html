@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adega Moraes - Cardápio Digital</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Bangers (para vibe Simpsons) -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        simpson: ['Bangers', 'cursive']
+                    },
+                    colors: {
+                        adega: {
+                            gold: '#FFD700',
+                            yellow: '#FFC107',
+                            darkBg: '#121212',
+                            cardBg: '#1E1E1E',
+                            cardHover: '#282828',
+                            accent: '#F59E0B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Ocultar barra de rolagem mas permitir navegação */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Efeito de clique nos botões */
+        .tap-active:active {
+            transform: scale(0.95);
+        }
+
+        /* Sombra dourada personalizada */
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.25);
+        }
+
+        /* Borda dourada suave */
+        .gold-border {
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-[#121212] text-gray-100 font-sans antialiased pb-32 max-w-md mx-auto min-h-screen relative shadow-2xl border-x border-zinc-800">
+
+    <!-- HEADER / TOPO COM LOGO DA ADEGA MORAES -->
+    <header class="bg-[#1a1a1a] sticky top-0 z-30 px-4 pt-3 pb-3 border-b border-amber-500/20 shadow-lg">
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-3">
+                <!-- Avatar do Homer Simpson / Logo -->
+                <div class="w-12 h-12 rounded-full bg-black border-2 border-amber-400 flex items-center justify-center p-0.5 overflow-hidden shadow-md gold-glow">
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <circle cx="100" cy="100" r="95" fill="#000" stroke="#FFD700" stroke-width="4"/>
+                        <!-- Moldura dourada -->
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="4,2"/>
+                        <!-- Homer Simbolico SVG -->
+                        <circle cx="100" cy="95" r="45" fill="#FFC107"/>
+                        <!-- Olhos Homer -->
+                        <circle cx="85" cy="85" r="16" fill="#FFF"/>
+                        <circle cx="85" cy="85" r="4" fill="#000"/>
+                        <circle cx="115" cy="85" r="16" fill="#FFF"/>
+                        <circle cx="115" cy="85" r="4" fill="#000"/>
+                        <!-- Bochecha/Boca -->
+                        <ellipse cx="100" cy="110" rx="25" ry="18" fill="#D19E61"/>
+                        <path d="M 85 110 Q 100 130 115 110" stroke="#000" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-black text-amber-400 text-lg tracking-wide uppercase flex items-center gap-1 leading-tight font-simpson tracking-wider">
+                        ADEGA MORAES
+                    </h1>
+                    <p class="text-xs text-gray-400 flex items-center gap-1 font-medium">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Aberto agora • Entrega Rápida ⚡
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botão WhatsApp Direto -->
+            <a id="direct-wa-btn" href="#" target="_blank" class="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg tap-active transition-all">
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+            </a>
+        </div>
+
+        <!-- Barra de Busca -->
+        <div class="relative mt-2">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 text-sm"></i>
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Buscar cerveja, vinho, uísque, narguilé..." 
+                class="w-full bg-[#262626] border border-zinc-700 focus:border-amber-400 text-gray-100 pl-10 pr-8 py-2 rounded-xl text-sm focus:outline-none transition-all placeholder-gray-500"
+                oninput="handleSearch(this.value)"
+            >
+            <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- CARROSSEL AUTOMÁTICO (HOMER SIMPSON THEME) -->
+    <section class="mt-3 px-4">
+        <div class="relative overflow-hidden rounded-2xl gold-border bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 h-36 shadow-lg">
+            <!-- Container das Lâminas do Carrossel -->
+            <div id="carousel-track" class="flex transition-transform duration-500 h-full">
+                
+                <!-- Banner 1 -->
+                <div class="min-w-full h-full relative bg-gradient-to-br from-zinc-950 via-zinc-900 to-amber-950 text-white p-4 flex flex-col justify-center">
+                    <span class="bg-amber-400 text-zinc-950 font-black text-[10px] tracking-wider uppercase px-2 py-0.5 rounded w-max mb-1">PROMOÇÃO DO HOMER 🍺</span>
+                    <h2 class="text-xl font-extrabold text-amber-300 leading-tight">Cerveja Estúpida de Gelada!</h2>
+                    <p class="text-xs text-gray-300 mt-1">Cervejas trincando para o seu final de semana.</p>
+                    <div class="mt-2 text-xs bg-amber-400 text-black font-extrabold px-3 py-1 rounded-full w-max shadow">
+                        A partir de R$ 3,80
+                    </div>
+                </div>
+
+                <!-- Banner 2 -->
+                <div class="min-w-full h-full relative bg-gradient-to-br from-zinc-950 via-amber-950 to-zinc-900 text-white p-4 flex flex-col justify-center">
+                    <span class="bg-emerald-500 text-white font-extrabold text-[10px] uppercase px-2 py-0.5 rounded w-max mb-1">SESSÃO NARGUILÉ 💨</span>
+                    <h2 class="text-xl font-extrabold text-white leading-tight">Carvão, Alumínio & Acessórios</h2>
+                    <p class="text-xs text-amber-200 mt-1">Tudo pronto para deixar seu rosh perfeito.</p>
+                    <div class="mt-2 text-xs bg-white text-zinc-900 font-extrabold px-3 py-1 rounded-full w-max shadow">
+                        Confira os Itens
+                    </div>
+                </div>
+
+                <!-- Banner 3 -->
+                <div class="min-w-full h-full relative bg-gradient-to-br from-amber-900 via-zinc-900 to-black text-white p-4 flex flex-col justify-center">
+                    <span class="bg-amber-400 text-black font-black text-[10px] uppercase px-2 py-0.5 rounded w-max mb-1">COMBOS E WHISKY 🥃</span>
+                    <h2 class="text-xl font-extrabold text-amber-400 leading-tight">Uísques & Gins Premium</h2>
+                    <p class="text-xs text-gray-300 mt-1">As melhores marcas com entrega super rápida.</p>
+                    <div class="mt-2 text-xs bg-amber-400 text-zinc-950 font-extrabold px-3 py-1 rounded-full w-max shadow">
+                        Peça Agora
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Dots de Navegação -->
+            <div id="carousel-dots" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1.5">
+                <button class="w-4 h-2 rounded-full bg-amber-400 transition-all" onclick="goToSlide(0)"></button>
+                <button class="w-2 h-2 rounded-full bg-white/50 transition-all" onclick="goToSlide(1)"></button>
+                <button class="w-2 h-2 rounded-full bg-white/50 transition-all" onclick="goToSlide(2)"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- NAVEGAÇÃO DE CATEGORIAS (PILLS) -->
+    <nav class="sticky top-[112px] z-20 bg-[#121212]/95 backdrop-blur-md pt-3 pb-2 px-4 mt-2 border-b border-zinc-800">
+        <div class="flex space-x-2 overflow-x-auto no-scrollbar scroll-smooth text-sm font-medium" id="categories-tabs">
+            <!-- Injetado via JS -->
+        </div>
+    </nav>
+
+    <!-- LISTAGEM DE PRODUTOS -->
+    <main class="px-4 pt-3 space-y-6" id="catalog-container">
+        <!-- Injetado via JS -->
+    </main>
+
+    <!-- BARRA FIXA DO CARRINHO NO RODAPÉ -->
+    <div id="cart-bar" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-transparent pointer-events-none z-40 transition-transform duration-300 translate-y-32">
+        <button onclick="openCartModal()" class="pointer-events-auto w-full bg-amber-400 hover:bg-amber-500 text-zinc-950 rounded-2xl p-3.5 shadow-2xl flex items-center justify-between tap-active font-extrabold border border-amber-300">
+            <div class="flex items-center space-x-3">
+                <div class="relative bg-zinc-950 text-amber-400 px-3 py-1.5 rounded-xl text-sm font-black border border-amber-400/40">
+                    <span id="cart-count">0</span>
+                </div>
+                <span class="text-base tracking-wide uppercase">Ver Carrinho</span>
+            </div>
+            <div class="flex items-center text-lg">
+                <span id="cart-total">R$ 0,00</span>
+                <i class="fa-solid fa-chevron-right text-xs ml-2 opacity-80"></i>
+            </div>
+        </button>
+    </div>
+
+    <!-- MODAL DO CARRINHO E FORMULÁRIO DE PEDIDO WHATSAPP -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex items-end justify-center">
+        <div class="bg-[#1a1a1a] w-full max-w-md rounded-t-3xl max-h-[90vh] flex flex-col transform translate-y-full transition-transform duration-300 border-t border-amber-500/30 text-gray-100" id="cart-modal-content">
+            
+            <!-- Header Modal -->
+            <div class="p-4 border-b border-zinc-800 flex justify-between items-center sticky top-0 bg-[#1a1a1a] rounded-t-3xl z-10">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-beer-mug-empty text-amber-400 text-xl"></i>
+                    <h2 class="font-extrabold text-lg text-amber-400 uppercase tracking-wider">Seu Pedido - Adega Moraes</h2>
+                </div>
+                <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Lista de Itens Adicionados -->
+            <div class="p-4 overflow-y-auto flex-1 space-y-3" id="cart-items-list">
+                <!-- Injetado dinamicamente -->
+            </div>
+
+            <!-- Formulário do Cliente / Checkout -->
+            <div class="p-4 border-t border-zinc-800 bg-[#141414] space-y-3">
+                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Dados para Entrega</h3>
+
+                <div>
+                    <input type="text" id="client-name" placeholder="Seu Nome Completo *" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
+                </div>
+
+                <div>
+                    <input type="text" id="address-input" placeholder="Endereço (Rua, Número e Bairro) *" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
+                </div>
+
+                <div>
+                    <input type="text" id="address-complement" placeholder="Complemento / Ponto de Referência (Opcional)" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-400 mb-1">Forma de Pagamento</label>
+                        <select id="payment-method" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+
+                    <div id="troco-box" class="hidden">
+                        <label class="block text-[11px] font-semibold text-gray-400 mb-1">Troco para Quanto?</label>
+                        <input type="text" id="troco-input" placeholder="Ex: R$ 50,00" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
+                    </div>
+                </div>
+
+                <div>
+                    <textarea id="order-notes" rows="1" placeholder="Observações (ex: Cerveja bem gelada, copos, etc.)" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 placeholder-gray-500"></textarea>
+                </div>
+
+                <!-- Resumo dos Valores -->
+                <div class="space-y-1 pt-2 text-sm border-t border-zinc-800">
+                    <div class="flex justify-between text-gray-400 text-xs">
+                        <span>Subtotal</span>
+                        <span id="modal-subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-400 text-xs">
+                        <span>Taxa de Entrega</span>
+                        <span class="text-emerald-400 font-semibold">A calcular no Whats</span>
+                    </div>
+                    <div class="flex justify-between text-white font-black text-base pt-1">
+                        <span class="text-amber-400">TOTAL</span>
+                        <span id="modal-total" class="text-amber-400">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <!-- Botão Enviar Pedido -->
+                <button onclick="sendOrderWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-2xl flex items-center justify-center space-x-2 shadow-xl tap-active transition-colors">
+                    <i class="fa-brands fa-whatsapp text-2xl"></i>
+                    <span class="uppercase tracking-wider">Enviar Pedido no WhatsApp</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NOTIFICAÇÃO TOAST -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-amber-400 text-zinc-950 font-bold px-4 py-2 rounded-full text-xs shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center space-x-2 border border-amber-300">
+        <i class="fa-solid fa-circle-check text-emerald-950"></i>
+        <span id="toast-message">Item adicionado!</span>
+    </div>
+
+    <!-- JAVASCRIPT PRINCIPAL -->
+    <script>
+        // --- NÚMERO DO WHATSAPP DA ADEGA MORAES ---
+        const ADEGA_WHATSAPP = "5511999999999"; 
+
+        // --- CATALOGO COMPLETO SOLICITADO ---
+        const catalogData = [
+            {
+                category: "Cervejas",
+                items: [
+                    {
+                        id: "cerv-1",
+                        name: "Cerveja Heineken Lata 350ml",
+                        price: 6.50,
+                        oldPrice: 7.20,
+                        discountBadge: "-10%",
+                        unitText: "Lata 350ml • Gelada",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%2315803d"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23166534"/><polygon points="100,85 108,105 130,105 112,117 118,137 100,125 82,137 88,117 70,105 92,105" fill="%23dc2626"/><text x="100" y="165" font-family="sans-serif" font-weight="bold" font-size="14" fill="%23ffffff" text-anchor="middle">Heineken</text></svg>`
+                    },
+                    {
+                        id: "cerv-2",
+                        name: "Cerveja Amstel 269ml",
+                        price: 3.80,
+                        oldPrice: 4.50,
+                        discountBadge: "-15%",
+                        unitText: "Lata 269ml",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%23d1d5db"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23fef08a"/><rect x="60" y="80" width="80" height="120" fill="%23dc2626" rx="5"/><text x="100" y="135" font-family="sans-serif" font-weight="bold" font-size="16" fill="%23ffffff" text-anchor="middle">AMSTEL</text></svg>`
+                    },
+                    {
+                        id: "cerv-3",
+                        name: "Cerveja Original 269ml",
+                        price: 4.50,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Lata 269ml",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%23e2e8f0"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23f8fafc"/><rect x="60" y="80" width="80" height="120" fill="%231e3a8a" rx="5"/><text x="100" y="135" font-family="sans-serif" font-weight="bold" font-size="14" fill="%23ffffff" text-anchor="middle">ORIGINAL</text></svg>`
+                    },
+                    {
+                        id: "cerv-4",
+                        name: "Cerveja Corona Extra 330ml",
+                        price: 8.90,
+                        oldPrice: 9.90,
+                        discountBadge: "-10%",
+                        unitText: "Long Neck 330ml",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M80,20 L120,20 L120,60 L135,120 L135,240 Q135,260 100,260 Q65,260 65,240 L65,120 L80,60 Z" fill="%23fef08a"/><rect x="68" y="110" width="64" height="70" fill="%23ffffff" opacity="0.9"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="14" fill="%231e3a8a" text-anchor="middle">Corona</text></svg>`
+                    },
+                    {
+                        id: "cerv-5",
+                        name: "Cerveja Budweiser 350ml",
+                        price: 5.20,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Lata 350ml",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%23991b1b"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23b91c1c"/><polygon points="100,70 140,140 60,140" fill="%23ffffff"/><text x="100" y="125" font-family="sans-serif" font-weight="bold" font-size="11" fill="%23991b1b" text-anchor="middle">BUDWEISER</text></svg>`
+                    }
+                ]
+            },
+            {
+                category: "Vinhos",
+                items: [
+                    {
+                        id: "vinh-1",
+                        name: "Vinho Reservado Concha y Toro",
+                        price: 39.90,
+                        oldPrice: 48.00,
+                        discountBadge: "-17%",
+                        unitText: "Garrafa 750ml • Seco",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%234c0519"/><rect x="70" y="120" width="60" height="80" fill="%23fef08a"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23000000" text-anchor="middle">CONCHA Y TORO</text></svg>`
+                    },
+                    {
+                        id: "vinh-2",
+                        name: "Vinho Pérgola Suave 1L",
+                        price: 24.90,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Garrafa 1 Litro • Suave",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M80,20 L120,20 L120,60 L140,110 L140,250 Q140,260 100,260 Q60,260 60,250 L60,110 L80,60 Z" fill="%23581c87"/><rect x="68" y="110" width="64" height="90" fill="%23ffffff"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="11" fill="%23581c87" text-anchor="middle">PÉRGOLA</text></svg>`
+                    },
+                    {
+                        id: "vinh-3",
+                        name: "Vinho Casillero del Diablo",
+                        price: 59.90,
+                        oldPrice: 69.90,
+                        discountBadge: "-14%",
+                        unitText: "Cabernet Sauvignon 750ml",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%2327272a"/><rect x="70" y="120" width="60" height="80" fill="%23991b1b"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="8" fill="%23ffffff" text-anchor="middle">CASILLERO</text></svg>`
+                    },
+                    {
+                        id: "vinh-4",
+                        name: "Vinho Quinta do Morgado",
+                        price: 18.90,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Garrafa 750ml • Tinto Suave",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%23701a75"/><rect x="70" y="120" width="60" height="80" fill="%23facc15"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="8" fill="%23701a75" text-anchor="middle">MORGADO</text></svg>`
+                    },
+                    {
+                        id: "vinh-5",
+                        name: "Vinho Chileno Gato Negro",
+                        price: 36.50,
+                        oldPrice: 42.00,
+                        discountBadge: "-13%",
+                        unitText: "Garrafa 750ml • Merlot",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%23000000"/><rect x="70" y="120" width="60" height="80" fill="%23f97316"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23ffffff" text-anchor="middle">GATO NEGRO</text></svg>`
+                    }
+                ]
+            },
+            {
+                category: "Uísques",
+                items: [
+                    {
+                        id: "uisq-1",
+                        name: "Whisky Red Label 1L",
+                        price: 99.90,
+                        oldPrice: 119.00,
+                        discountBadge: "-16%",
+                        unitText: "Garrafa 1 Litro Original",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23b45309"/><rect x="65" y="100" width="70" height="90" fill="%23dc2626" transform="rotate(-10 100 145)"/><text x="100" y="148" font-family="sans-serif" font-weight="bold" font-size="10" fill="%23ffffff" text-anchor="middle" transform="rotate(-10 100 145)">RED LABEL</text></svg>`
+                    },
+                    {
+                        id: "uisq-2",
+                        name: "Whisky Jack Daniel's 1L",
+                        price: 149.90,
+                        oldPrice: 169.00,
+                        discountBadge: "-11%",
+                        unitText: "Old No. 7 • Garrafa 1L",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="6" fill="%2318181b"/><rect x="65" y="90" width="70" height="110" fill="%23000000" stroke="%23ffffff" stroke-width="1"/><text x="100" y="135" font-family="sans-serif" font-weight="bold" font-size="10" fill="%23ffffff" text-anchor="middle">JACK DANIEL'S</text></svg>`
+                    },
+                    {
+                        id: "uisq-3",
+                        name: "Whisky Black Label 1L",
+                        price: 179.90,
+                        oldPrice: 199.00,
+                        discountBadge: "-10%",
+                        unitText: "12 Anos • Garrafa 1 Litro",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23d97706"/><rect x="65" y="100" width="70" height="90" fill="%23000000" transform="rotate(-10 100 145)"/><text x="100" y="148" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23f59e0b" text-anchor="middle" transform="rotate(-10 100 145)">BLACK LABEL</text></svg>`
+                    },
+                    {
+                        id: "uisq-4",
+                        name: "Whisky Ballantine's Finest 1L",
+                        price: 79.90,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Garrafa 1 Litro",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="10" fill="%231e3a8a"/><rect x="65" y="100" width="70" height="90" fill="%23fef08a"/><text x="100" y="148" font-family="sans-serif" font-weight="bold" font-size="8" fill="%231e3a8a" text-anchor="middle">BALLANTINE'S</text></svg>`
+                    },
+                    {
+                        id: "uisq-5",
+                        name: "Whisky White Horse 1L",
+                        price: 74.90,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Cavalo Branco • Garrafa 1L",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23b45309"/><rect x="65" y="90" width="70" height="100" fill="%23ffffff"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="8" fill="%23000000" text-anchor="middle">WHITE HORSE</text></svg>`
+                    }
+                ]
+            },
+            {
+                category: "Gins",
+                items: [
+                    {
+                        id: "gin-1",
+                        name: "Gin Tanqueray London Dry 750ml",
+                        price: 115.00,
+                        oldPrice: 129.00,
+                        discountBadge: "-11%",
+                        unitText: "Garrafa 750ml Importado",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="15" fill="%2315803d"/><circle cx="100" cy="120" r="25" fill="%23dc2626"/><text x="100" y="126" font-family="sans-serif" font-weight="bold" font-size="18" fill="%23ffffff" text-anchor="middle">T</text></svg>`
+                    },
+                    {
+                        id: "gin-2",
+                        name: "Gin Beefeater London 750ml",
+                        price: 98.00,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Garrafa 750ml Original",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23f8fafc" stroke="%23e2e8f0"/><rect x="65" y="90" width="70" height="110" fill="%23dc2626"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23ffffff" text-anchor="middle">BEEFEATER</text></svg>`
+                    },
+                    {
+                        id: "gin-3",
+                        name: "Gin Bombay Sapphire 750ml",
+                        price: 129.90,
+                        oldPrice: 145.00,
+                        discountBadge: "-10%",
+                        unitText: "Garrafa Azul Premium 750ml",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%230284c7"/><rect x="65" y="90" width="70" height="110" fill="%23e0f2fe"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="9" fill="%230369a1" text-anchor="middle">BOMBAY</text></svg>`
+                    },
+                    {
+                        id: "gin-4",
+                        name: "Gin Gordon's London Dry 750ml",
+                        price: 69.90,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Garrafa 750ml Clássico",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23e2e8f0"/><rect x="65" y="90" width="70" height="110" fill="%23eab308"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="10" fill="%23000000" text-anchor="middle">GORDON'S</text></svg>`
+                    },
+                    {
+                        id: "gin-5",
+                        name: "Gin Rocks Strawberry Morango 1L",
+                        price: 39.90,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Sabor Morango • Garrafa 1L",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="10" fill="%23e11d48"/><rect x="65" y="90" width="70" height="110" fill="%23f43f5e"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="11" fill="%23ffffff" text-anchor="middle">ROCKS</text></svg>`
+                    }
+                ]
+            },
+            {
+                category: "Narguilé & Tabacaria",
+                items: [
+                    {
+                        id: "narg-1",
+                        name: "Caixa de Carvão Zomo 1kg",
+                        price: 32.00,
+                        oldPrice: 38.00,
+                        discountBadge: "-15%",
+                        unitText: "Caixa 1kg • Fibra de Coco",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="30" y="40" width="140" height="120" rx="12" fill="%2318181b" stroke="%23f59e0b" stroke-width="4"/><text x="100" y="95" font-family="sans-serif" font-weight="bold" font-size="18" fill="%23f59e0b" text-anchor="middle">ZOMO</text><text x="100" y="120" font-family="sans-serif" font-size="11" fill="%23ffffff" text-anchor="middle">CARVÃO 1KG</text></svg>`
+                    },
+                    {
+                        id: "narg-2",
+                        name: "Carvão Solto (Pacote Pequeno)",
+                        price: 8.00,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Pacote c/ 10 Unidades",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="40" y="50" width="120" height="100" rx="10" fill="%2327272a"/><rect x="60" y="70" width="30" height="30" rx="4" fill="%23000000"/><rect x="110" y="70" width="30" height="30" rx="4" fill="%23000000"/><rect x="85" y="110" width="30" height="30" rx="4" fill="%23000000"/></svg>`
+                    },
+                    {
+                        id: "narg-3",
+                        name: "Caixa de Alumínio Predador (50 folhas)",
+                        price: 18.00,
+                        oldPrice: 22.00,
+                        discountBadge: "-18%",
+                        unitText: "Caixa com 50 folhas esticadas",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="30" y="50" width="140" height="100" rx="8" fill="%2394a3b8"/><text x="100" y="100" font-family="sans-serif" font-weight="bold" font-size="12" fill="%230f172a" text-anchor="middle">ALUMÍNIO PREDADOR</text></svg>`
+                    },
+                    {
+                        id: "narg-4",
+                        name: "Folhas de Alumínio Soltas (10 un)",
+                        price: 5.00,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "10 Folhas de Alumínio",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="50" fill="%23cbd5e1" stroke="%2364748b" stroke-width="3"/></svg>`
+                    },
+                    {
+                        id: "narg-5",
+                        name: "Mangueira para Narguilé Lavável",
+                        price: 25.00,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Mangueira Completa Hygienic",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M40,160 Q100,20 160,160" stroke="%23f59e0b" stroke-width="16" fill="none" stroke-linecap="round"/></svg>`
+                    },
+                    {
+                        id: "narg-6",
+                        name: "Pegador de Carvão Narguilé",
+                        price: 12.00,
+                        oldPrice: null,
+                        discountBadge: null,
+                        unitText: "Inox Reforçado",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M70,40 L100,160 L130,40" stroke="%23e2e8f0" stroke-width="10" fill="none" stroke-linecap="round"/></svg>`
+                    },
+                    {
+                        id: "narg-7",
+                        name: "Forninho / Acendedor Elétrico",
+                        price: 55.00,
+                        oldPrice: 65.00,
+                        discountBadge: "-15%",
+                        unitText: "Acendedor Rápido 110v/220v",
+                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="50" y="70" width="100" height="80" rx="10" fill="%2318181b" stroke="%23ef4444" stroke-width="3"/><circle cx="100" cy="110" r="25" fill="none" stroke="%23ef4444" stroke-width="6"/></svg>`
+                    }
+                ]
+            }
+        ];
+
+        // --- ESTADO DO CARRINHO ---
+        let cart = {};
+
+        // --- INICIALIZAÇÃO ---
+        window.onload = function() {
+            renderCategoriesTabs();
+            renderCatalog(catalogData);
+            initCarousel();
+
+            // Mostra/Oculta campo de troco
+            document.getElementById('payment-method').addEventListener('change', function(e) {
+                const trocoBox = document.getElementById('troco-box');
+                if (e.target.value === 'Dinheiro') {
+                    trocoBox.classList.remove('hidden');
+                } else {
+                    trocoBox.classList.add('hidden');
+                }
+            });
+
+            // Configura link do Whats
+            document.getElementById('direct-wa-btn').href = `https://wa.me/${ADEGA_WHATSAPP}`;
+        };
+
+        // --- CARROSSEL AUTOMÁTICO DO TOPO ---
+        let currentSlide = 0;
+        const totalSlides = 3;
+
+        function initCarousel() {
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                goToSlide(currentSlide);
+            }, 3500);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            const track = document.getElementById('carousel-track');
+            track.style.transform = `translateX(-${index * 100}%)`;
+
+            const dots = document.getElementById('carousel-dots').children;
+            for (let i = 0; i < dots.length; i++) {
+                if (i === index) {
+                    dots[i].className = "w-4 h-2 rounded-full bg-amber-400 transition-all";
+                } else {
+                    dots[i].className = "w-2 h-2 rounded-full bg-white/50 transition-all";
+                }
+            }
+        }
+
+        // --- CATEGORIAS ---
+        function renderCategoriesTabs() {
+            const tabsContainer = document.getElementById('categories-tabs');
+            let html = `
+                <button onclick="filterCategory('all')" id="tab-all" class="px-4 py-1.5 rounded-full font-bold text-xs whitespace-nowrap bg-amber-400 text-zinc-950 shadow transition-all uppercase">
+                    Todos
+                </button>
+            `;
+
+            catalogData.forEach((cat, index) => {
+                const slug = `cat-${index}`;
+                html += `
+                    <button onclick="filterCategory('${slug}')" id="tab-${slug}" class="px-4 py-1.5 rounded-full font-semibold text-xs text-gray-400 bg-[#222] hover:bg-[#333] whitespace-nowrap transition-all uppercase">
+                        ${cat.category}
+                    </button>
+                `;
+            });
+
+            tabsContainer.innerHTML = html;
+        }
+
+        function filterCategory(targetId) {
+            const buttons = document.getElementById('categories-tabs').querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.className = "px-4 py-1.5 rounded-full font-semibold text-xs text-gray-400 bg-[#222] whitespace-nowrap transition-all uppercase";
+            });
+
+            const activeBtn = document.getElementById(`tab-${targetId}`);
+            if (activeBtn) {
+                activeBtn.className = "px-4 py-1.5 rounded-full font-bold text-xs whitespace-nowrap bg-amber-400 text-zinc-950 shadow transition-all uppercase";
+            }
+
+            if (targetId === 'all') {
+                renderCatalog(catalogData);
+            } else {
+                const index = parseInt(targetId.replace('cat-', ''));
+                renderCatalog([catalogData[index]]);
+            }
+        }
+
+        // --- RENDERIZAR PRODUTOS (LAYOUT ESTILO 99FOOD) ---
+        function renderCatalog(data) {
+            const container = document.getElementById('catalog-container');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fa-solid fa-beer-mug-empty text-4xl mb-2 text-amber-500/40"></i>
+                        <p>Nenhum produto encontrado.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach(sec => {
+                const sectionEl = document.createElement('section');
+                sectionEl.className = "space-y-3";
+
+                const titleEl = document.createElement('h2');
+                titleEl.className = "text-base font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-2";
+                titleEl.innerHTML = `<span class="w-1.5 h-4 bg-amber-400 rounded-full"></span>${sec.category}`;
+                sectionEl.appendChild(titleEl);
+
+                const gridEl = document.createElement('div');
+                gridEl.className = "grid grid-cols-2 gap-3 sm:grid-cols-3";
+
+                sec.items.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = "flex flex-col bg-[#1e1e1e] rounded-2xl p-2 gold-border transition-all hover:bg-[#252525]";
+
+                    const formattedPrice = `R$ ${product.price.toFixed(2).replace('.', ',')}`;
+                    const formattedOldPrice = product.oldPrice ? `R$ ${product.oldPrice.toFixed(2).replace('.', ',')}` : null;
+
+                    card.innerHTML = `
+                        <!-- Imagem do Produto com Box Escuro e Botão + Branco -->
+                        <div class="relative w-full aspect-square bg-[#2a2a2a] rounded-xl flex items-center justify-center p-3 overflow-hidden">
+                            <img src="${product.image}" alt="${product.name}" class="h-full object-contain drop-shadow-md">
+                            
+                            <!-- Botão Circular Branco de Adicionar (+) -->
+                            <button 
+                                onclick="addToCart('${product.id}', '${product.name}', ${product.price})"
+                                class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-white shadow-lg flex items-center justify-center text-zinc-950 font-bold hover:bg-amber-400 transition-colors tap-active"
+                                title="Adicionar"
+                            >
+                                <i class="fa-solid fa-plus text-sm"></i>
+                            </button>
+                        </div>
+
+                        <!-- Detalhes -->
+                        <div class="mt-2 px-1 flex-1 flex flex-col justify-between">
+                            <div>
+                                <!-- Preço + Desconto -->
+                                <div class="flex items-baseline flex-wrap gap-1">
+                                    <span class="text-base font-black text-amber-400">${formattedPrice}</span>
+                                    ${formattedOldPrice ? `<span class="text-[10px] text-gray-500 line-through">${formattedOldPrice}</span>` : ''}
+                                    ${product.discountBadge ? `<span class="text-[9px] font-extrabold bg-emerald-500/20 text-emerald-400 px-1 rounded">${product.discountBadge}</span>` : ''}
+                                </div>
+
+                                <!-- Nome -->
+                                <h3 class="text-xs font-bold text-gray-200 leading-snug mt-1 line-clamp-2">
+                                    ${product.name}
+                                </h3>
+                            </div>
+
+                            <!-- Subtítulo -->
+                            <p class="text-[10px] text-gray-400 mt-1 truncate">
+                                ${product.unitText}
+                            </p>
+                        </div>
+                    `;
+
+                    gridEl.appendChild(card);
+                });
+
+                sectionEl.appendChild(gridEl);
+                container.appendChild(sectionEl);
+            });
+        }
+
+        // --- BUSCA DINÂMICA ---
+        function handleSearch(query) {
+            const clearBtn = document.getElementById('clear-search');
+            if (query.trim() !== '') {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            const cleanQuery = query.toLowerCase().trim();
+            if (!cleanQuery) {
+                renderCatalog(catalogData);
+                return;
+            }
+
+            const filteredData = catalogData.map(category => {
+                const matchingItems = category.items.filter(item => 
+                    item.name.toLowerCase().includes(cleanQuery) || 
+                    item.unitText.toLowerCase().includes(cleanQuery)
+                );
+                return {
+                    category: category.category,
+                    items: matchingItems
+                };
+            }).filter(category => category.items.length > 0);
+
+            renderCatalog(filteredData);
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('clear-search').classList.add('hidden');
+            renderCatalog(catalogData);
+        }
+
+        // --- OPERAÇÕES DO CARRINHO ---
+        function addToCart(id, name, price) {
+            if (cart[id]) {
+                cart[id].quantity += 1;
+            } else {
+                cart[id] = { name, price, quantity: 1 };
+            }
+
+            updateCartUI();
+            showToast(`Adicionado: ${name}`);
+        }
+
+        function removeFromCart(id) {
+            if (cart[id]) {
+                cart[id].quantity -= 1;
+                if (cart[id].quantity <= 0) {
+                    delete cart[id];
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            for (const id in cart) {
+                totalItems += cart[id].quantity;
+                totalPrice += cart[id].price * cart[id].quantity;
+            }
+
+            const formattedTotal = `R$ ${totalPrice.toFixed(2).replace('.', ',')}`;
+
+            document.getElementById('cart-count').textContent = totalItems;
+            document.getElementById('cart-total').textContent = formattedTotal;
+
+            const cartBar = document.getElementById('cart-bar');
+            if (totalItems > 0) {
+                cartBar.classList.remove('translate-y-32');
+            } else {
+                cartBar.classList.add('translate-y-32');
+                closeCartModal();
+            }
+
+            document.getElementById('modal-subtotal').textContent = formattedTotal;
+            document.getElementById('modal-total').textContent = formattedTotal;
+
+            renderCartModalItems();
+        }
+
+        function renderCartModalItems() {
+            const listContainer = document.getElementById('cart-items-list');
+            listContainer.innerHTML = '';
+
+            if (Object.keys(cart).length === 0) {
+                listContainer.innerHTML = '<p class="text-center text-gray-500 text-xs py-4">Seu carrinho está vazio.</p>';
+                return;
+            }
+
+            for (const id in cart) {
+                const item = cart[id];
+                const itemTotal = `R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}`;
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between bg-[#242424] p-3 rounded-xl border border-zinc-800";
+                row.innerHTML = `
+                    <div class="flex-1 pr-2">
+                        <h4 class="font-bold text-xs text-gray-200 leading-tight">${item.name}</h4>
+                        <span class="text-xs font-black text-amber-400">${itemTotal}</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-[#181818] px-2 py-1 rounded-lg border border-zinc-700">
+                        <button onclick="removeFromCart('${id}')" class="w-6 h-6 text-amber-400 font-bold flex items-center justify-center hover:bg-zinc-800 rounded">
+                            <i class="fa-solid fa-minus text-xs"></i>
+                        </button>
+                        <span class="font-bold text-xs text-white px-1">${item.quantity}</span>
+                        <button onclick="addToCart('${id}', '${item.name}', ${item.price})" class="w-6 h-6 text-amber-400 font-bold flex items-center justify-center hover:bg-zinc-800 rounded">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                listContainer.appendChild(row);
+            }
+        }
+
+        // --- CONTROLE MODAL ---
+        function openCartModal() {
+            const modal = document.getElementById('cart-modal');
+            const content = document.getElementById('cart-modal-content');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeCartModal() {
+            const modal = document.getElementById('cart-modal');
+            const content = document.getElementById('cart-modal-content');
+
+            modal.classList.add('opacity-0');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // --- ENVIO DO PEDIDO PARA O WHATSAPP ---
+        function sendOrderWhatsApp() {
+            if (Object.keys(cart).length === 0) return;
+
+            const name = document.getElementById('client-name').value.trim();
+            const address = document.getElementById('address-input').value.trim();
+            const complement = document.getElementById('address-complement').value.trim();
+            const payment = document.getElementById('payment-method').value;
+            const troco = document.getElementById('troco-input').value.trim();
+            const notes = document.getElementById('order-notes').value.trim();
+
+            if (!name) {
+                alert('Por favor, informe seu nome.');
+                return;
+            }
+
+            if (!address) {
+                alert('Por favor, informe o endereço de entrega.');
+                return;
+            }
+
+            let message = `🍺 *NOVO PEDIDO - ADEGA MORAES* 🍺\n\n`;
+            message += `👤 *Cliente:* ${name}\n`;
+            message += `📍 *Endereço:* ${address}\n`;
+            if (complement) message += `🏡 *Complemento:* ${complement}\n`;
+            message += `----------------------------------\n`;
+            message += `🛒 *ITENS DO PEDIDO:*\n`;
+
+            let total = 0;
+            for (const id in cart) {
+                const item = cart[id];
+                const sub = item.price * item.quantity;
+                total += sub;
+                message += `• ${item.quantity}x ${item.name} - R$ ${sub.toFixed(2).replace('.', ',')}\n`;
+            }
+
+            message += `----------------------------------\n`;
+            message += `💰 *TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}\n`;
+            message += `💳 *Forma de Pagamento:* ${payment}\n`;
+
+            if (payment === 'Dinheiro' && troco) {
+                message += `💵 *Troco para:* ${troco}\n`;
+            }
+
+            if (notes) {
+                message += `📝 *Obs:* ${notes}\n`;
+            }
+
+            message += `\n_Pedido gerado via Cardápio Digital Adega Moraes_`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${ADEGA_WHATSAPP}?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // --- TOAST ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
