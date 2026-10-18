@@ -1,944 +1,1111 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adega Moraes - Cardápio Digital</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter & Bangers (para vibe Simpsons) -->
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        simpson: ['Bangers', 'cursive']
-                    },
-                    colors: {
-                        adega: {
-                            gold: '#FFD700',
-                            yellow: '#FFC107',
-                            darkBg: '#121212',
-                            cardBg: '#1E1E1E',
-                            cardHover: '#282828',
-                            accent: '#F59E0B'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Ocultar barra de rolagem mas permitir navegação */
-        .no-scrollbar::-webkit-scrollbar {
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --primary: #E5A823;
+            --primary-hover: #c48e1a;
+            --text-color: #ffffff;
+            --text-muted: #a0a0a0;
+            --badge-green: #00875a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 90px;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(180deg, #000000 0%, #121212 100%);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            object-fit: cover;
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* BUSCA */
+        .search-container {
+            padding: 10px 15px;
+            position: sticky;
+            top: 92px;
+            background-color: var(--bg-color);
+            z-index: 99;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 25px;
+            padding: 8px 15px;
+        }
+
+        .search-box i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            width: 100%;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        /* CARROSSEL AUTOMÁTICO */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 10px auto 20px auto;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 18px;
+            border-radius: 10px;
+        }
+
+        /* CATEGORIAS (NAVEGAÇÃO RÁPIDA) */
+        .categories-nav {
+            display: flex;
+            gap: 10px;
+            padding: 10px 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            position: sticky;
+            top: 145px;
+            background-color: var(--bg-color);
+            z-index: 98;
+        }
+
+        .categories-nav::-webkit-scrollbar {
             display: none;
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+
+        .cat-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        /* Efeito de clique nos botões */
-        .tap-active:active {
-            transform: scale(0.95);
+        .cat-btn.active {
+            background-color: var(--primary);
+            color: #000;
+            border-color: var(--primary);
         }
 
-        /* Sombra dourada personalizada */
-        .gold-glow {
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.25);
+        /* SEÇÕES & PRODUTOS (LAYOUT 99FOOD) */
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            padding: 15px 15px 5px 15px;
+            font-weight: 700;
+            border-left: 4px solid var(--primary);
+            margin: 15px 15px 10px 15px;
         }
 
-        /* Borda dourada suave */
-        .gold-border {
-            border: 1px solid rgba(255, 215, 0, 0.2);
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 15px;
+        }
+
+        @media (min-width: 600px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            border: 1px solid #282828;
+        }
+
+        .product-img-container {
+            width: 100%;
+            height: 130px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-img-container img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        /* BOTÃO CIRCULAR BRANCO COM '+' DA 99FOOD */
+        .add-btn {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            width: 32px;
+            height: 32px;
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .add-btn:active {
+            transform: scale(0.9);
+        }
+
+        .product-info {
+            margin-top: 8px;
+        }
+
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .price {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .old-price {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .badge-discount {
+            background-color: var(--badge-green);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .product-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-top: 4px;
+            line-height: 1.2;
+        }
+
+        .product-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* CARRINHO FLUTUANTE */
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--primary);
+            color: #000;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.4);
+        }
+
+        .cart-badge {
+            background-color: #000;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+
+        /* MODAL DO CHECKOUT */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            color: #fff;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .item-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-top: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            background-color: #121212;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: #fff;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
     </style>
 </head>
-<body class="bg-[#121212] text-gray-100 font-sans antialiased pb-32 max-w-md mx-auto min-h-screen relative shadow-2xl border-x border-zinc-800">
+<body>
 
-    <!-- HEADER / TOPO COM LOGO DA ADEGA MORAES -->
-    <header class="bg-[#1a1a1a] sticky top-0 z-30 px-4 pt-3 pb-3 border-b border-amber-500/20 shadow-lg">
-        <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center space-x-3">
-                <!-- Avatar do Homer Simpson / Logo -->
-                <div class="w-12 h-12 rounded-full bg-black border-2 border-amber-400 flex items-center justify-center p-0.5 overflow-hidden shadow-md gold-glow">
-                    <svg viewBox="0 0 200 200" class="w-full h-full">
-                        <circle cx="100" cy="100" r="95" fill="#000" stroke="#FFD700" stroke-width="4"/>
-                        <!-- Moldura dourada -->
-                        <circle cx="100" cy="100" r="80" fill="none" stroke="#FFD700" stroke-width="2" stroke-dasharray="4,2"/>
-                        <!-- Homer Simbolico SVG -->
-                        <circle cx="100" cy="95" r="45" fill="#FFC107"/>
-                        <!-- Olhos Homer -->
-                        <circle cx="85" cy="85" r="16" fill="#FFF"/>
-                        <circle cx="85" cy="85" r="4" fill="#000"/>
-                        <circle cx="115" cy="85" r="16" fill="#FFF"/>
-                        <circle cx="115" cy="85" r="4" fill="#000"/>
-                        <!-- Bochecha/Boca -->
-                        <ellipse cx="100" cy="110" rx="25" ry="18" fill="#D19E61"/>
-                        <path d="M 85 110 Q 100 130 115 110" stroke="#000" stroke-width="3" fill="none"/>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="font-black text-amber-400 text-lg tracking-wide uppercase flex items-center gap-1 leading-tight font-simpson tracking-wider">
-                        ADEGA MORAES
-                    </h1>
-                    <p class="text-xs text-gray-400 flex items-center gap-1 font-medium">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Aberto agora • Entrega Rápida ⚡
-                    </p>
-                </div>
-            </div>
-
-            <!-- Botão WhatsApp Direto -->
-            <a id="direct-wa-btn" href="#" target="_blank" class="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg tap-active transition-all">
-                <i class="fa-brands fa-whatsapp text-xl"></i>
-            </a>
-        </div>
-
-        <!-- Barra de Busca -->
-        <div class="relative mt-2">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 text-sm"></i>
-            <input 
-                type="text" 
-                id="search-input" 
-                placeholder="Buscar cerveja, vinho, uísque, narguilé..." 
-                class="w-full bg-[#262626] border border-zinc-700 focus:border-amber-400 text-gray-100 pl-10 pr-8 py-2 rounded-xl text-sm focus:outline-none transition-all placeholder-gray-500"
-                oninput="handleSearch(this.value)"
-            >
-            <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
+    <!-- HEADER COM LOGO DA ADEGA MORAES -->
+    <header>
+        <div class="logo-container">
+            <img src="a90128c5-3602-6c80-fafb-d88198c2a84a.jpeg" alt="Adega Moraes" class="logo-img" onerror="this.src='https://via.placeholder.com/60?text=ADEGA'">
+            <div class="header-title">Adega Moraes</div>
         </div>
     </header>
 
-    <!-- CARROSSEL AUTOMÁTICO (HOMER SIMPSON THEME) -->
-    <section class="mt-3 px-4">
-        <div class="relative overflow-hidden rounded-2xl gold-border bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 h-36 shadow-lg">
-            <!-- Container das Lâminas do Carrossel -->
-            <div id="carousel-track" class="flex transition-transform duration-500 h-full">
-                
-                <!-- Banner 1 -->
-                <div class="min-w-full h-full relative bg-gradient-to-br from-zinc-950 via-zinc-900 to-amber-950 text-white p-4 flex flex-col justify-center">
-                    <span class="bg-amber-400 text-zinc-950 font-black text-[10px] tracking-wider uppercase px-2 py-0.5 rounded w-max mb-1">PROMOÇÃO DO HOMER 🍺</span>
-                    <h2 class="text-xl font-extrabold text-amber-300 leading-tight">Cerveja Estúpida de Gelada!</h2>
-                    <p class="text-xs text-gray-300 mt-1">Cervejas trincando para o seu final de semana.</p>
-                    <div class="mt-2 text-xs bg-amber-400 text-black font-extrabold px-3 py-1 rounded-full w-max shadow">
-                        A partir de R$ 3,80
-                    </div>
-                </div>
-
-                <!-- Banner 2 -->
-                <div class="min-w-full h-full relative bg-gradient-to-br from-zinc-950 via-amber-950 to-zinc-900 text-white p-4 flex flex-col justify-center">
-                    <span class="bg-emerald-500 text-white font-extrabold text-[10px] uppercase px-2 py-0.5 rounded w-max mb-1">SESSÃO NARGUILÉ 💨</span>
-                    <h2 class="text-xl font-extrabold text-white leading-tight">Carvão, Alumínio & Acessórios</h2>
-                    <p class="text-xs text-amber-200 mt-1">Tudo pronto para deixar seu rosh perfeito.</p>
-                    <div class="mt-2 text-xs bg-white text-zinc-900 font-extrabold px-3 py-1 rounded-full w-max shadow">
-                        Confira os Itens
-                    </div>
-                </div>
-
-                <!-- Banner 3 -->
-                <div class="min-w-full h-full relative bg-gradient-to-br from-amber-900 via-zinc-900 to-black text-white p-4 flex flex-col justify-center">
-                    <span class="bg-amber-400 text-black font-black text-[10px] uppercase px-2 py-0.5 rounded w-max mb-1">COMBOS E WHISKY 🥃</span>
-                    <h2 class="text-xl font-extrabold text-amber-400 leading-tight">Uísques & Gins Premium</h2>
-                    <p class="text-xs text-gray-300 mt-1">As melhores marcas com entrega super rápida.</p>
-                    <div class="mt-2 text-xs bg-amber-400 text-zinc-950 font-extrabold px-3 py-1 rounded-full w-max shadow">
-                        Peça Agora
-                    </div>
-                </div>
-
+    <!-- CARROSSEL AUTOMÁTICO DO TOPO -->
+    <div class="carousel-container">
+        <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-slide">
+                <img src="IMG_1271.jpeg" alt="Combo Gin" onerror="this.src='https://via.placeholder.com/600x250/111/E5A823?text=Combo+Gin+Oferta'">
             </div>
-
-            <!-- Dots de Navegação -->
-            <div id="carousel-dots" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1.5">
-                <button class="w-4 h-2 rounded-full bg-amber-400 transition-all" onclick="goToSlide(0)"></button>
-                <button class="w-2 h-2 rounded-full bg-white/50 transition-all" onclick="goToSlide(1)"></button>
-                <button class="w-2 h-2 rounded-full bg-white/50 transition-all" onclick="goToSlide(2)"></button>
+            <div class="carousel-slide">
+                <img src="IMG_1272.jpeg" alt="Frete Grátis" onerror="this.src='https://via.placeholder.com/600x250/111/E5A823?text=Frete+Gratis+Acima+R$300'">
+            </div>
+            <div class="carousel-slide">
+                <img src="IMG_1273.jpeg" alt="Cervejas em Promoção" onerror="this.src='https://via.placeholder.com/600x250/111/E5A823?text=Cervejas+em+Promocao'">
             </div>
         </div>
-    </section>
-
-    <!-- NAVEGAÇÃO DE CATEGORIAS (PILLS) -->
-    <nav class="sticky top-[112px] z-20 bg-[#121212]/95 backdrop-blur-md pt-3 pb-2 px-4 mt-2 border-b border-zinc-800">
-        <div class="flex space-x-2 overflow-x-auto no-scrollbar scroll-smooth text-sm font-medium" id="categories-tabs">
-            <!-- Injetado via JS -->
-        </div>
-    </nav>
-
-    <!-- LISTAGEM DE PRODUTOS -->
-    <main class="px-4 pt-3 space-y-6" id="catalog-container">
-        <!-- Injetado via JS -->
-    </main>
-
-    <!-- BARRA FIXA DO CARRINHO NO RODAPÉ -->
-    <div id="cart-bar" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-transparent pointer-events-none z-40 transition-transform duration-300 translate-y-32">
-        <button onclick="openCartModal()" class="pointer-events-auto w-full bg-amber-400 hover:bg-amber-500 text-zinc-950 rounded-2xl p-3.5 shadow-2xl flex items-center justify-between tap-active font-extrabold border border-amber-300">
-            <div class="flex items-center space-x-3">
-                <div class="relative bg-zinc-950 text-amber-400 px-3 py-1.5 rounded-xl text-sm font-black border border-amber-400/40">
-                    <span id="cart-count">0</span>
-                </div>
-                <span class="text-base tracking-wide uppercase">Ver Carrinho</span>
-            </div>
-            <div class="flex items-center text-lg">
-                <span id="cart-total">R$ 0,00</span>
-                <i class="fa-solid fa-chevron-right text-xs ml-2 opacity-80"></i>
-            </div>
-        </button>
-    </div>
-
-    <!-- MODAL DO CARRINHO E FORMULÁRIO DE PEDIDO WHATSAPP -->
-    <div id="cart-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex items-end justify-center">
-        <div class="bg-[#1a1a1a] w-full max-w-md rounded-t-3xl max-h-[90vh] flex flex-col transform translate-y-full transition-transform duration-300 border-t border-amber-500/30 text-gray-100" id="cart-modal-content">
-            
-            <!-- Header Modal -->
-            <div class="p-4 border-b border-zinc-800 flex justify-between items-center sticky top-0 bg-[#1a1a1a] rounded-t-3xl z-10">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-beer-mug-empty text-amber-400 text-xl"></i>
-                    <h2 class="font-extrabold text-lg text-amber-400 uppercase tracking-wider">Seu Pedido - Adega Moraes</h2>
-                </div>
-                <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-gray-400 hover:text-white">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Lista de Itens Adicionados -->
-            <div class="p-4 overflow-y-auto flex-1 space-y-3" id="cart-items-list">
-                <!-- Injetado dinamicamente -->
-            </div>
-
-            <!-- Formulário do Cliente / Checkout -->
-            <div class="p-4 border-t border-zinc-800 bg-[#141414] space-y-3">
-                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Dados para Entrega</h3>
-
-                <div>
-                    <input type="text" id="client-name" placeholder="Seu Nome Completo *" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
-                </div>
-
-                <div>
-                    <input type="text" id="address-input" placeholder="Endereço (Rua, Número e Bairro) *" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
-                </div>
-
-                <div>
-                    <input type="text" id="address-complement" placeholder="Complemento / Ponto de Referência (Opcional)" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-[11px] font-semibold text-gray-400 mb-1">Forma de Pagamento</label>
-                        <select id="payment-method" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
-                            <option value="Pix">Pix</option>
-                            <option value="Cartão de Crédito">Cartão de Crédito</option>
-                            <option value="Cartão de Débito">Cartão de Débito</option>
-                            <option value="Dinheiro">Dinheiro</option>
-                        </select>
-                    </div>
-
-                    <div id="troco-box" class="hidden">
-                        <label class="block text-[11px] font-semibold text-gray-400 mb-1">Troco para Quanto?</label>
-                        <input type="text" id="troco-input" placeholder="Ex: R$ 50,00" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400 placeholder-gray-500">
-                    </div>
-                </div>
-
-                <div>
-                    <textarea id="order-notes" rows="1" placeholder="Observações (ex: Cerveja bem gelada, copos, etc.)" class="w-full bg-[#242424] border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 placeholder-gray-500"></textarea>
-                </div>
-
-                <!-- Resumo dos Valores -->
-                <div class="space-y-1 pt-2 text-sm border-t border-zinc-800">
-                    <div class="flex justify-between text-gray-400 text-xs">
-                        <span>Subtotal</span>
-                        <span id="modal-subtotal">R$ 0,00</span>
-                    </div>
-                    <div class="flex justify-between text-gray-400 text-xs">
-                        <span>Taxa de Entrega</span>
-                        <span class="text-emerald-400 font-semibold">A calcular no Whats</span>
-                    </div>
-                    <div class="flex justify-between text-white font-black text-base pt-1">
-                        <span class="text-amber-400">TOTAL</span>
-                        <span id="modal-total" class="text-amber-400">R$ 0,00</span>
-                    </div>
-                </div>
-
-                <!-- Botão Enviar Pedido -->
-                <button onclick="sendOrderWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-2xl flex items-center justify-center space-x-2 shadow-xl tap-active transition-colors">
-                    <i class="fa-brands fa-whatsapp text-2xl"></i>
-                    <span class="uppercase tracking-wider">Enviar Pedido no WhatsApp</span>
-                </button>
-            </div>
-
+        <div class="carousel-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
         </div>
     </div>
 
-    <!-- NOTIFICAÇÃO TOAST -->
-    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-amber-400 text-zinc-950 font-bold px-4 py-2 rounded-full text-xs shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center space-x-2 border border-amber-300">
-        <i class="fa-solid fa-circle-check text-emerald-950"></i>
-        <span id="toast-message">Item adicionado!</span>
+    <!-- CAMPO DE BUSCA -->
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Buscar bebida, narguilé..." onkeyup="filterProducts()">
+        </div>
     </div>
 
-    <!-- JAVASCRIPT PRINCIPAL -->
+    <!-- CATEGORIAS -->
+    <div class="categories-nav">
+        <button class="cat-btn active" onclick="scrollToCategory('cervejas')">🍺 Cervejas</button>
+        <button class="cat-btn" onclick="scrollToCategory('vinhos')">🍷 Vinhos</button>
+        <button class="cat-btn" onclick="scrollToCategory('uisques')">🥃 Uísques</button>
+        <button class="cat-btn" onclick="scrollToCategory('gins')">🍸 Gins</button>
+        <button class="cat-btn" onclick="scrollToCategory('narguile')">💨 Narguilé</button>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div id="productsContainer">
+
+        <!-- CERVEJAS -->
+        <div id="cervejas">
+            <div class="section-title">Cervejas</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Cerveja Heineken Long Neck 330ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1274.webp" alt="Heineken" onerror="this.src='https://via.placeholder.com/100?text=Heineken'">
+                        <button class="add-btn" onclick="addToCart('Cerveja Heineken Long Neck 330ml', 8.50)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 8,50</span>
+                        </div>
+                        <div class="product-title">Cerveja Heineken Long Neck 330ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Cerveja Amstel Puro Malte 269ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1275.jpeg" alt="Amstel" onerror="this.src='https://via.placeholder.com/100?text=Amstel'">
+                        <button class="add-btn" onclick="addToCart('Cerveja Amstel Puro Malte 269ml', 3.38)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 3,38</span>
+                        </div>
+                        <div class="product-title">Cerveja Amstel Puro Malte 269ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Cerveja Original Lata 269ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1276.jpeg" alt="Original" onerror="this.src='https://via.placeholder.com/100?text=Original'">
+                        <button class="add-btn" onclick="addToCart('Cerveja Original Lata 269ml', 4.50)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 4,50</span>
+                        </div>
+                        <div class="product-title">Cerveja Original Lata 269ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Cerveja Corona Extra 330ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1277.jpeg" alt="Corona" onerror="this.src='https://via.placeholder.com/100?text=Corona'">
+                        <button class="add-btn" onclick="addToCart('Cerveja Corona Extra 330ml', 9.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 9,00</span>
+                        </div>
+                        <div class="product-title">Cerveja Corona Extra Long Neck 330ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Cerveja Budweiser 330ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1278.jpeg" alt="Budweiser" onerror="this.src='https://via.placeholder.com/100?text=Budweiser'">
+                        <button class="add-btn" onclick="addToCart('Cerveja Budweiser 330ml', 7.50)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 7,50</span>
+                        </div>
+                        <div class="product-title">Cerveja Budweiser Long Neck 330ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VINHOS -->
+        <div id="vinhos">
+            <div class="section-title">Vinhos</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Vinho Reservado Concha y Toro Cabernet 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1279.jpeg" alt="Concha y Toro" onerror="this.src='https://via.placeholder.com/100?text=Vinho'">
+                        <button class="add-btn" onclick="addToCart('Vinho Concha y Toro 750ml', 38.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 38,90</span>
+                        </div>
+                        <div class="product-title">Vinho Reservado Concha y Toro Cabernet 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Vinho Pérgola Tinto Suave 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1280.jpeg" alt="Pérgola" onerror="this.src='https://via.placeholder.com/100?text=Pergola'">
+                        <button class="add-btn" onclick="addToCart('Vinho Pérgola Tinto Suave 1L', 24.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 24,90</span>
+                        </div>
+                        <div class="product-title">Vinho Tinto Suave Pérgola 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Vinho Casillero del Diablo 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1281.jpeg" alt="Casillero" onerror="this.src='https://via.placeholder.com/100?text=Casillero'">
+                        <button class="add-btn" onclick="addToCart('Vinho Casillero del Diablo 750ml', 54.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 54,90</span>
+                        </div>
+                        <div class="product-title">Vinho Casillero del Diablo 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Vinho Quinta do Morgado 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1282.jpeg" alt="Quinta do Morgado" onerror="this.src='https://via.placeholder.com/100?text=Quinta+Morgado'">
+                        <button class="add-btn" onclick="addToCart('Vinho Quinta do Morgado 750ml', 18.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 18,90</span>
+                        </div>
+                        <div class="product-title">Vinho Quinta do Morgado Tinto Suave 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Vinho Gato Negro Malbec 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1283.jpeg" alt="Gato Negro" onerror="this.src='https://via.placeholder.com/100?text=Gato+Negro'">
+                        <button class="add-btn" onclick="addToCart('Vinho Gato Negro Malbec 750ml', 36.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 36,00</span>
+                        </div>
+                        <div class="product-title">Vinho Gato Negro Malbec 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UÍSQUES -->
+        <div id="uisques">
+            <div class="section-title">Uísques</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Whisky Red Label 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1284.jpeg" alt="Red Label" onerror="this.src='https://via.placeholder.com/100?text=Red+Label'">
+                        <button class="add-btn" onclick="addToCart('Whisky Red Label 1L', 89.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 89,90</span>
+                        </div>
+                        <div class="product-title">Whisky Red Label 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky Jack Daniels 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1285.jpeg" alt="Jack Daniels" onerror="this.src='https://via.placeholder.com/100?text=Jack+Daniels'">
+                        <button class="add-btn" onclick="addToCart('Whisky Jack Daniels 1L', 149.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 149,90</span>
+                        </div>
+                        <div class="product-title">Whisky Jack Daniel's 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky Black Label 12 Anos 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1286.jpeg" alt="Black Label" onerror="this.src='https://via.placeholder.com/100?text=Black+Label'">
+                        <button class="add-btn" onclick="addToCart('Whisky Black Label 12 Anos 1L', 179.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 179,90</span>
+                        </div>
+                        <div class="product-title">Whisky Black Label 12 Anos 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky Ballantines 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1287.jpeg" alt="Ballantines" onerror="this.src='https://via.placeholder.com/100?text=Ballantines'">
+                        <button class="add-btn" onclick="addToCart('Whisky Ballantines 1L', 79.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 79,90</span>
+                        </div>
+                        <div class="product-title">Whisky Ballantine's 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky White Horse 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1288.jpeg" alt="White Horse" onerror="this.src='https://via.placeholder.com/100?text=White+Horse'">
+                        <button class="add-btn" onclick="addToCart('Whisky White Horse 1L', 69.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 69,90</span>
+                        </div>
+                        <div class="product-title">Whisky White Horse 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GINS -->
+        <div id="gins">
+            <div class="section-title">Gins</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Gin Tanqueray London Dry 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1289.jpeg" alt="Tanqueray" onerror="this.src='https://via.placeholder.com/100?text=Tanqueray'">
+                        <button class="add-btn" onclick="addToCart('Gin Tanqueray 750ml', 119.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 119,90</span>
+                        </div>
+                        <div class="product-title">Gin Tanqueray London Dry 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Beefeater London Dry 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1290.jpeg" alt="Beefeater" onerror="this.src='https://via.placeholder.com/100?text=Beefeater'">
+                        <button class="add-btn" onclick="addToCart('Gin Beefeater 750ml', 99.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 99,90</span>
+                        </div>
+                        <div class="product-title">Gin Beefeater London Dry 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Bombay Sapphire 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1291.jpeg" alt="Bombay" onerror="this.src='https://via.placeholder.com/100?text=Bombay'">
+                        <button class="add-btn" onclick="addToCart('Gin Bombay Sapphire 750ml', 129.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 129,90</span>
+                        </div>
+                        <div class="product-title">Gin Bombay Sapphire 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Gordons London Dry">
+                    <div class="product-img-container">
+                        <img src="IMG_1292.jpeg" alt="Gordons" onerror="this.src='https://via.placeholder.com/100?text=Gordons'">
+                        <button class="add-btn" onclick="addToCart('Gin Gordon\'s 750ml', 69.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 69,90</span>
+                        </div>
+                        <div class="product-title">Gin Gordon's London Dry</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Rocks Morango 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1293.jpeg" alt="Gin Rocks" onerror="this.src='https://via.placeholder.com/100?text=Gin+Rocks'">
+                        <button class="add-btn" onclick="addToCart('Gin Rocks Morango 1L', 39.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 39,90</span>
+                        </div>
+                        <div class="product-title">Gin Rocks Flavored Morango 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NARGUILÉ -->
+        <div id="narguile">
+            <div class="section-title">Narguilé & Acessórios</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Caixa de Carvão Zomo 1kg">
+                    <div class="product-img-container">
+                        <img src="IMG_1294.jpeg" alt="Carvão Zomo" onerror="this.src='https://via.placeholder.com/100?text=Carvao+Zomo'">
+                        <button class="add-btn" onclick="addToCart('Caixa de Carvão Zomo 1kg', 32.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 32,00</span>
+                        </div>
+                        <div class="product-title">Caixa de Carvão para Narguilé Zomo 1kg</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Carvão Solto 10un">
+                    <div class="product-img-container">
+                        <img src="IMG_1295.jpeg" alt="Carvão Solto" onerror="this.src='https://via.placeholder.com/100?text=Carvao+Solto'">
+                        <button class="add-btn" onclick="addToCart('Carvão Solto (10un)', 5.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 5,00</span>
+                        </div>
+                        <div class="product-title">Carvão para Narguilé Solto (10 unidades)</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Caixa de Alumínio Predator">
+                    <div class="product-img-container">
+                        <img src="IMG_1296.jpeg" alt="Alumínio Caixa" onerror="this.src='https://via.placeholder.com/100?text=Aluminio'">
+                        <button class="add-btn" onclick="addToCart('Caixa de Alumínio Predator', 18.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 18,00</span>
+                        </div>
+                        <div class="product-title">Caixa de Alumínio Predator (50 folhas)</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Folha de Alumínio Unidade">
+                    <div class="product-img-container">
+                        <img src="IMG_1297.jpeg" alt="Folha Alumínio" onerror="this.src='https://via.placeholder.com/100?text=Folha+Aluminio'">
+                        <button class="add-btn" onclick="addToCart('Folha de Alumínio (Unidade)', 0.50)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 0,50</span>
+                        </div>
+                        <div class="product-title">Folha de Alumínio para Narguilé (Unidade)</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Mangueira Silicone Narguilé">
+                    <div class="product-img-container">
+                        <img src="IMG_1298.jpeg" alt="Mangueira" onerror="this.src='https://via.placeholder.com/100?text=Mangueira'">
+                        <button class="add-btn" onclick="addToCart('Mangueira Silicone Narguilé', 25.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 25,00</span>
+                        </div>
+                        <div class="product-title">Mangueira para Narguilé Lavável Silicone</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Pegador de Carvão Reforçado">
+                    <div class="product-img-container">
+                        <img src="IMG_1299.jpeg" alt="Pegador" onerror="this.src='https://via.placeholder.com/100?text=Pegador'">
+                        <button class="add-btn" onclick="addToCart('Pegador de Carvão Reforçado', 12.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 12,00</span>
+                        </div>
+                        <div class="product-title">Pegador de Carvão Grande Reforçado</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Forninho Acendedor Elétrico">
+                    <div class="product-img-container">
+                        <img src="IMG_1300.jpeg" alt="Forninho" onerror="this.src='https://via.placeholder.com/100?text=Forninho'">
+                        <button class="add-btn" onclick="addToCart('Forninho Acendedor Elétrico', 45.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container">
+                            <span class="price">R$ 45,00</span>
+                        </div>
+                        <div class="product-title">Forninho / Acendedor Elétrico de Carvão</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BARRA DO CARRINHO FLUTUANTE -->
+    <div class="cart-bar" onclick="openCart()">
+        <div>
+            <span class="cart-badge" id="cartCount">0</span>
+            <span style="margin-left: 8px;">Ver Pedido</span>
+        </div>
+        <div id="cartTotal">R$ 0,00</div>
+    </div>
+
+    <!-- MODAL DO CARRINHO & CHECKOUT -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Seu Pedido - Adega Moraes</h3>
+                <span class="close-btn" onclick="closeCart()">&times;</span>
+            </div>
+
+            <div id="cartItemsContainer">
+                <!-- Itens adicionados aparecem aqui -->
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 15px; font-weight: bold; font-size: 1.1rem;">
+                <span>Total:</span>
+                <span id="modalTotal">R$ 0,00</span>
+            </div>
+
+            <div class="form-group">
+                <label>Seu Nome *</label>
+                <input type="text" id="clientName" placeholder="Ex: João Silva">
+            </div>
+
+            <div class="form-group">
+                <label>Endereço de Entrega *</label>
+                <input type="text" id="clientAddress" placeholder="Rua, Número, Bairro">
+            </div>
+
+            <div class="form-group">
+                <label>Forma de Pagamento *</label>
+                <select id="paymentMethod" onchange="toggleTroco()">
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão de Crédito/Débito">Cartão de Crédito/Débito</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="trocoGroup" style="display: none;">
+                <label>Precisa de troco para quanto?</label>
+                <input type="text" id="trocoValue" placeholder="Ex: R$ 50,00">
+            </div>
+
+            <button class="btn-whatsapp" onclick="sendToWhatsApp()">
+                <i class="fab fa-whatsapp"></i> Enviar Pedido no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DO CARDÁPIO -->
     <script>
-        // --- NÚMERO DO WHATSAPP DA ADEGA MORAES ---
-        const ADEGA_WHATSAPP = "5511999999999"; 
-
-        // --- CATALOGO COMPLETO SOLICITADO ---
-        const catalogData = [
-            {
-                category: "Cervejas",
-                items: [
-                    {
-                        id: "cerv-1",
-                        name: "Cerveja Heineken Lata 350ml",
-                        price: 6.50,
-                        oldPrice: 7.20,
-                        discountBadge: "-10%",
-                        unitText: "Lata 350ml • Gelada",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%2315803d"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23166534"/><polygon points="100,85 108,105 130,105 112,117 118,137 100,125 82,137 88,117 70,105 92,105" fill="%23dc2626"/><text x="100" y="165" font-family="sans-serif" font-weight="bold" font-size="14" fill="%23ffffff" text-anchor="middle">Heineken</text></svg>`
-                    },
-                    {
-                        id: "cerv-2",
-                        name: "Cerveja Amstel 269ml",
-                        price: 3.80,
-                        oldPrice: 4.50,
-                        discountBadge: "-15%",
-                        unitText: "Lata 269ml",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%23d1d5db"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23fef08a"/><rect x="60" y="80" width="80" height="120" fill="%23dc2626" rx="5"/><text x="100" y="135" font-family="sans-serif" font-weight="bold" font-size="16" fill="%23ffffff" text-anchor="middle">AMSTEL</text></svg>`
-                    },
-                    {
-                        id: "cerv-3",
-                        name: "Cerveja Original 269ml",
-                        price: 4.50,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Lata 269ml",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%23e2e8f0"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23f8fafc"/><rect x="60" y="80" width="80" height="120" fill="%231e3a8a" rx="5"/><text x="100" y="135" font-family="sans-serif" font-weight="bold" font-size="14" fill="%23ffffff" text-anchor="middle">ORIGINAL</text></svg>`
-                    },
-                    {
-                        id: "cerv-4",
-                        name: "Cerveja Corona Extra 330ml",
-                        price: 8.90,
-                        oldPrice: 9.90,
-                        discountBadge: "-10%",
-                        unitText: "Long Neck 330ml",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M80,20 L120,20 L120,60 L135,120 L135,240 Q135,260 100,260 Q65,260 65,240 L65,120 L80,60 Z" fill="%23fef08a"/><rect x="68" y="110" width="64" height="70" fill="%23ffffff" opacity="0.9"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="14" fill="%231e3a8a" text-anchor="middle">Corona</text></svg>`
-                    },
-                    {
-                        id: "cerv-5",
-                        name: "Cerveja Budweiser 350ml",
-                        price: 5.20,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Lata 350ml",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="50" y="20" width="100" height="240" rx="20" fill="%23991b1b"/><rect x="55" y="30" width="90" height="220" rx="15" fill="%23b91c1c"/><polygon points="100,70 140,140 60,140" fill="%23ffffff"/><text x="100" y="125" font-family="sans-serif" font-weight="bold" font-size="11" fill="%23991b1b" text-anchor="middle">BUDWEISER</text></svg>`
-                    }
-                ]
-            },
-            {
-                category: "Vinhos",
-                items: [
-                    {
-                        id: "vinh-1",
-                        name: "Vinho Reservado Concha y Toro",
-                        price: 39.90,
-                        oldPrice: 48.00,
-                        discountBadge: "-17%",
-                        unitText: "Garrafa 750ml • Seco",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%234c0519"/><rect x="70" y="120" width="60" height="80" fill="%23fef08a"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23000000" text-anchor="middle">CONCHA Y TORO</text></svg>`
-                    },
-                    {
-                        id: "vinh-2",
-                        name: "Vinho Pérgola Suave 1L",
-                        price: 24.90,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Garrafa 1 Litro • Suave",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M80,20 L120,20 L120,60 L140,110 L140,250 Q140,260 100,260 Q60,260 60,250 L60,110 L80,60 Z" fill="%23581c87"/><rect x="68" y="110" width="64" height="90" fill="%23ffffff"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="11" fill="%23581c87" text-anchor="middle">PÉRGOLA</text></svg>`
-                    },
-                    {
-                        id: "vinh-3",
-                        name: "Vinho Casillero del Diablo",
-                        price: 59.90,
-                        oldPrice: 69.90,
-                        discountBadge: "-14%",
-                        unitText: "Cabernet Sauvignon 750ml",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%2327272a"/><rect x="70" y="120" width="60" height="80" fill="%23991b1b"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="8" fill="%23ffffff" text-anchor="middle">CASILLERO</text></svg>`
-                    },
-                    {
-                        id: "vinh-4",
-                        name: "Vinho Quinta do Morgado",
-                        price: 18.90,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Garrafa 750ml • Tinto Suave",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%23701a75"/><rect x="70" y="120" width="60" height="80" fill="%23facc15"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="8" fill="%23701a75" text-anchor="middle">MORGADO</text></svg>`
-                    },
-                    {
-                        id: "vinh-5",
-                        name: "Vinho Chileno Gato Negro",
-                        price: 36.50,
-                        oldPrice: 42.00,
-                        discountBadge: "-13%",
-                        unitText: "Garrafa 750ml • Merlot",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><path d="M85,20 L115,20 L115,70 L135,120 L135,250 Q135,260 100,260 Q65,260 65,250 L65,120 L85,70 Z" fill="%23000000"/><rect x="70" y="120" width="60" height="80" fill="%23f97316"/><text x="100" y="155" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23ffffff" text-anchor="middle">GATO NEGRO</text></svg>`
-                    }
-                ]
-            },
-            {
-                category: "Uísques",
-                items: [
-                    {
-                        id: "uisq-1",
-                        name: "Whisky Red Label 1L",
-                        price: 99.90,
-                        oldPrice: 119.00,
-                        discountBadge: "-16%",
-                        unitText: "Garrafa 1 Litro Original",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23b45309"/><rect x="65" y="100" width="70" height="90" fill="%23dc2626" transform="rotate(-10 100 145)"/><text x="100" y="148" font-family="sans-serif" font-weight="bold" font-size="10" fill="%23ffffff" text-anchor="middle" transform="rotate(-10 100 145)">RED LABEL</text></svg>`
-                    },
-                    {
-                        id: "uisq-2",
-                        name: "Whisky Jack Daniel's 1L",
-                        price: 149.90,
-                        oldPrice: 169.00,
-                        discountBadge: "-11%",
-                        unitText: "Old No. 7 • Garrafa 1L",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="6" fill="%2318181b"/><rect x="65" y="90" width="70" height="110" fill="%23000000" stroke="%23ffffff" stroke-width="1"/><text x="100" y="135" font-family="sans-serif" font-weight="bold" font-size="10" fill="%23ffffff" text-anchor="middle">JACK DANIEL'S</text></svg>`
-                    },
-                    {
-                        id: "uisq-3",
-                        name: "Whisky Black Label 1L",
-                        price: 179.90,
-                        oldPrice: 199.00,
-                        discountBadge: "-10%",
-                        unitText: "12 Anos • Garrafa 1 Litro",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23d97706"/><rect x="65" y="100" width="70" height="90" fill="%23000000" transform="rotate(-10 100 145)"/><text x="100" y="148" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23f59e0b" text-anchor="middle" transform="rotate(-10 100 145)">BLACK LABEL</text></svg>`
-                    },
-                    {
-                        id: "uisq-4",
-                        name: "Whisky Ballantine's Finest 1L",
-                        price: 79.90,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Garrafa 1 Litro",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="10" fill="%231e3a8a"/><rect x="65" y="100" width="70" height="90" fill="%23fef08a"/><text x="100" y="148" font-family="sans-serif" font-weight="bold" font-size="8" fill="%231e3a8a" text-anchor="middle">BALLANTINE'S</text></svg>`
-                    },
-                    {
-                        id: "uisq-5",
-                        name: "Whisky White Horse 1L",
-                        price: 74.90,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Cavalo Branco • Garrafa 1L",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23b45309"/><rect x="65" y="90" width="70" height="100" fill="%23ffffff"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="8" fill="%23000000" text-anchor="middle">WHITE HORSE</text></svg>`
-                    }
-                ]
-            },
-            {
-                category: "Gins",
-                items: [
-                    {
-                        id: "gin-1",
-                        name: "Gin Tanqueray London Dry 750ml",
-                        price: 115.00,
-                        oldPrice: 129.00,
-                        discountBadge: "-11%",
-                        unitText: "Garrafa 750ml Importado",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="15" fill="%2315803d"/><circle cx="100" cy="120" r="25" fill="%23dc2626"/><text x="100" y="126" font-family="sans-serif" font-weight="bold" font-size="18" fill="%23ffffff" text-anchor="middle">T</text></svg>`
-                    },
-                    {
-                        id: "gin-2",
-                        name: "Gin Beefeater London 750ml",
-                        price: 98.00,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Garrafa 750ml Original",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23f8fafc" stroke="%23e2e8f0"/><rect x="65" y="90" width="70" height="110" fill="%23dc2626"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="9" fill="%23ffffff" text-anchor="middle">BEEFEATER</text></svg>`
-                    },
-                    {
-                        id: "gin-3",
-                        name: "Gin Bombay Sapphire 750ml",
-                        price: 129.90,
-                        oldPrice: 145.00,
-                        discountBadge: "-10%",
-                        unitText: "Garrafa Azul Premium 750ml",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%230284c7"/><rect x="65" y="90" width="70" height="110" fill="%23e0f2fe"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="9" fill="%230369a1" text-anchor="middle">BOMBAY</text></svg>`
-                    },
-                    {
-                        id: "gin-4",
-                        name: "Gin Gordon's London Dry 750ml",
-                        price: 69.90,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Garrafa 750ml Clássico",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="8" fill="%23e2e8f0"/><rect x="65" y="90" width="70" height="110" fill="%23eab308"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="10" fill="%23000000" text-anchor="middle">GORDON'S</text></svg>`
-                    },
-                    {
-                        id: "gin-5",
-                        name: "Gin Rocks Strawberry Morango 1L",
-                        price: 39.90,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Sabor Morango • Garrafa 1L",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280"><rect x="60" y="50" width="80" height="200" rx="10" fill="%23e11d48"/><rect x="65" y="90" width="70" height="110" fill="%23f43f5e"/><text x="100" y="145" font-family="sans-serif" font-weight="bold" font-size="11" fill="%23ffffff" text-anchor="middle">ROCKS</text></svg>`
-                    }
-                ]
-            },
-            {
-                category: "Narguilé & Tabacaria",
-                items: [
-                    {
-                        id: "narg-1",
-                        name: "Caixa de Carvão Zomo 1kg",
-                        price: 32.00,
-                        oldPrice: 38.00,
-                        discountBadge: "-15%",
-                        unitText: "Caixa 1kg • Fibra de Coco",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="30" y="40" width="140" height="120" rx="12" fill="%2318181b" stroke="%23f59e0b" stroke-width="4"/><text x="100" y="95" font-family="sans-serif" font-weight="bold" font-size="18" fill="%23f59e0b" text-anchor="middle">ZOMO</text><text x="100" y="120" font-family="sans-serif" font-size="11" fill="%23ffffff" text-anchor="middle">CARVÃO 1KG</text></svg>`
-                    },
-                    {
-                        id: "narg-2",
-                        name: "Carvão Solto (Pacote Pequeno)",
-                        price: 8.00,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Pacote c/ 10 Unidades",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="40" y="50" width="120" height="100" rx="10" fill="%2327272a"/><rect x="60" y="70" width="30" height="30" rx="4" fill="%23000000"/><rect x="110" y="70" width="30" height="30" rx="4" fill="%23000000"/><rect x="85" y="110" width="30" height="30" rx="4" fill="%23000000"/></svg>`
-                    },
-                    {
-                        id: "narg-3",
-                        name: "Caixa de Alumínio Predador (50 folhas)",
-                        price: 18.00,
-                        oldPrice: 22.00,
-                        discountBadge: "-18%",
-                        unitText: "Caixa com 50 folhas esticadas",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="30" y="50" width="140" height="100" rx="8" fill="%2394a3b8"/><text x="100" y="100" font-family="sans-serif" font-weight="bold" font-size="12" fill="%230f172a" text-anchor="middle">ALUMÍNIO PREDADOR</text></svg>`
-                    },
-                    {
-                        id: "narg-4",
-                        name: "Folhas de Alumínio Soltas (10 un)",
-                        price: 5.00,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "10 Folhas de Alumínio",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="50" fill="%23cbd5e1" stroke="%2364748b" stroke-width="3"/></svg>`
-                    },
-                    {
-                        id: "narg-5",
-                        name: "Mangueira para Narguilé Lavável",
-                        price: 25.00,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Mangueira Completa Hygienic",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M40,160 Q100,20 160,160" stroke="%23f59e0b" stroke-width="16" fill="none" stroke-linecap="round"/></svg>`
-                    },
-                    {
-                        id: "narg-6",
-                        name: "Pegador de Carvão Narguilé",
-                        price: 12.00,
-                        oldPrice: null,
-                        discountBadge: null,
-                        unitText: "Inox Reforçado",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M70,40 L100,160 L130,40" stroke="%23e2e8f0" stroke-width="10" fill="none" stroke-linecap="round"/></svg>`
-                    },
-                    {
-                        id: "narg-7",
-                        name: "Forninho / Acendedor Elétrico",
-                        price: 55.00,
-                        oldPrice: 65.00,
-                        discountBadge: "-15%",
-                        unitText: "Acendedor Rápido 110v/220v",
-                        image: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="50" y="70" width="100" height="80" rx="10" fill="%2318181b" stroke="%23ef4444" stroke-width="3"/><circle cx="100" cy="110" r="25" fill="none" stroke="%23ef4444" stroke-width="6"/></svg>`
-                    }
-                ]
-            }
-        ];
-
-        // --- ESTADO DO CARRINHO ---
-        let cart = {};
-
-        // --- INICIALIZAÇÃO ---
-        window.onload = function() {
-            renderCategoriesTabs();
-            renderCatalog(catalogData);
-            initCarousel();
-
-            // Mostra/Oculta campo de troco
-            document.getElementById('payment-method').addEventListener('change', function(e) {
-                const trocoBox = document.getElementById('troco-box');
-                if (e.target.value === 'Dinheiro') {
-                    trocoBox.classList.remove('hidden');
-                } else {
-                    trocoBox.classList.add('hidden');
-                }
-            });
-
-            // Configura link do Whats
-            document.getElementById('direct-wa-btn').href = `https://wa.me/${ADEGA_WHATSAPP}`;
-        };
-
-        // --- CARROSSEL AUTOMÁTICO DO TOPO ---
+        // CARROSSEL AUTOMÁTICO
         let currentSlide = 0;
-        const totalSlides = 3;
+        const track = id('carouselTrack');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
 
-        function initCarousel() {
-            setInterval(() => {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                goToSlide(currentSlide);
-            }, 3500);
-        }
-
-        function goToSlide(index) {
-            currentSlide = index;
-            const track = document.getElementById('carousel-track');
-            track.style.transform = `translateX(-${index * 100}%)`;
-
-            const dots = document.getElementById('carousel-dots').children;
-            for (let i = 0; i < dots.length; i++) {
-                if (i === index) {
-                    dots[i].className = "w-4 h-2 rounded-full bg-amber-400 transition-all";
-                } else {
-                    dots[i].className = "w-2 h-2 rounded-full bg-white/50 transition-all";
-                }
-            }
-        }
-
-        // --- CATEGORIAS ---
-        function renderCategoriesTabs() {
-            const tabsContainer = document.getElementById('categories-tabs');
-            let html = `
-                <button onclick="filterCategory('all')" id="tab-all" class="px-4 py-1.5 rounded-full font-bold text-xs whitespace-nowrap bg-amber-400 text-zinc-950 shadow transition-all uppercase">
-                    Todos
-                </button>
-            `;
-
-            catalogData.forEach((cat, index) => {
-                const slug = `cat-${index}`;
-                html += `
-                    <button onclick="filterCategory('${slug}')" id="tab-${slug}" class="px-4 py-1.5 rounded-full font-semibold text-xs text-gray-400 bg-[#222] hover:bg-[#333] whitespace-nowrap transition-all uppercase">
-                        ${cat.category}
-                    </button>
-                `;
-            });
-
-            tabsContainer.innerHTML = html;
-        }
-
-        function filterCategory(targetId) {
-            const buttons = document.getElementById('categories-tabs').querySelectorAll('button');
-            buttons.forEach(btn => {
-                btn.className = "px-4 py-1.5 rounded-full font-semibold text-xs text-gray-400 bg-[#222] whitespace-nowrap transition-all uppercase";
-            });
-
-            const activeBtn = document.getElementById(`tab-${targetId}`);
-            if (activeBtn) {
-                activeBtn.className = "px-4 py-1.5 rounded-full font-bold text-xs whitespace-nowrap bg-amber-400 text-zinc-950 shadow transition-all uppercase";
-            }
-
-            if (targetId === 'all') {
-                renderCatalog(catalogData);
-            } else {
-                const index = parseInt(targetId.replace('cat-', ''));
-                renderCatalog([catalogData[index]]);
-            }
-        }
-
-        // --- RENDERIZAR PRODUTOS (LAYOUT ESTILO 99FOOD) ---
-        function renderCatalog(data) {
-            const container = document.getElementById('catalog-container');
-            container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-gray-500">
-                        <i class="fa-solid fa-beer-mug-empty text-4xl mb-2 text-amber-500/40"></i>
-                        <p>Nenhum produto encontrado.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            data.forEach(sec => {
-                const sectionEl = document.createElement('section');
-                sectionEl.className = "space-y-3";
-
-                const titleEl = document.createElement('h2');
-                titleEl.className = "text-base font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-2";
-                titleEl.innerHTML = `<span class="w-1.5 h-4 bg-amber-400 rounded-full"></span>${sec.category}`;
-                sectionEl.appendChild(titleEl);
-
-                const gridEl = document.createElement('div');
-                gridEl.className = "grid grid-cols-2 gap-3 sm:grid-cols-3";
-
-                sec.items.forEach(product => {
-                    const card = document.createElement('div');
-                    card.className = "flex flex-col bg-[#1e1e1e] rounded-2xl p-2 gold-border transition-all hover:bg-[#252525]";
-
-                    const formattedPrice = `R$ ${product.price.toFixed(2).replace('.', ',')}`;
-                    const formattedOldPrice = product.oldPrice ? `R$ ${product.oldPrice.toFixed(2).replace('.', ',')}` : null;
-
-                    card.innerHTML = `
-                        <!-- Imagem do Produto com Box Escuro e Botão + Branco -->
-                        <div class="relative w-full aspect-square bg-[#2a2a2a] rounded-xl flex items-center justify-center p-3 overflow-hidden">
-                            <img src="${product.image}" alt="${product.name}" class="h-full object-contain drop-shadow-md">
-                            
-                            <!-- Botão Circular Branco de Adicionar (+) -->
-                            <button 
-                                onclick="addToCart('${product.id}', '${product.name}', ${product.price})"
-                                class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-white shadow-lg flex items-center justify-center text-zinc-950 font-bold hover:bg-amber-400 transition-colors tap-active"
-                                title="Adicionar"
-                            >
-                                <i class="fa-solid fa-plus text-sm"></i>
-                            </button>
-                        </div>
-
-                        <!-- Detalhes -->
-                        <div class="mt-2 px-1 flex-1 flex flex-col justify-between">
-                            <div>
-                                <!-- Preço + Desconto -->
-                                <div class="flex items-baseline flex-wrap gap-1">
-                                    <span class="text-base font-black text-amber-400">${formattedPrice}</span>
-                                    ${formattedOldPrice ? `<span class="text-[10px] text-gray-500 line-through">${formattedOldPrice}</span>` : ''}
-                                    ${product.discountBadge ? `<span class="text-[9px] font-extrabold bg-emerald-500/20 text-emerald-400 px-1 rounded">${product.discountBadge}</span>` : ''}
-                                </div>
-
-                                <!-- Nome -->
-                                <h3 class="text-xs font-bold text-gray-200 leading-snug mt-1 line-clamp-2">
-                                    ${product.name}
-                                </h3>
-                            </div>
-
-                            <!-- Subtítulo -->
-                            <p class="text-[10px] text-gray-400 mt-1 truncate">
-                                ${product.unitText}
-                            </p>
-                        </div>
-                    `;
-
-                    gridEl.appendChild(card);
-                });
-
-                sectionEl.appendChild(gridEl);
-                container.appendChild(sectionEl);
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
             });
         }
+        setInterval(nextSlide, 3500);
 
-        // --- BUSCA DINÂMICA ---
-        function handleSearch(query) {
-            const clearBtn = document.getElementById('clear-search');
-            if (query.trim() !== '') {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
+        // NAVEGAÇÃO DE CATEGORIAS
+        function scrollToCategory(id) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.scrollIntoView({ behavior: 'smooth' });
             }
-
-            const cleanQuery = query.toLowerCase().trim();
-            if (!cleanQuery) {
-                renderCatalog(catalogData);
-                return;
-            }
-
-            const filteredData = catalogData.map(category => {
-                const matchingItems = category.items.filter(item => 
-                    item.name.toLowerCase().includes(cleanQuery) || 
-                    item.unitText.toLowerCase().includes(cleanQuery)
-                );
-                return {
-                    category: category.category,
-                    items: matchingItems
-                };
-            }).filter(category => category.items.length > 0);
-
-            renderCatalog(filteredData);
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            document.getElementById('clear-search').classList.add('hidden');
-            renderCatalog(catalogData);
-        }
-
-        // --- OPERAÇÕES DO CARRINHO ---
-        function addToCart(id, name, price) {
-            if (cart[id]) {
-                cart[id].quantity += 1;
-            } else {
-                cart[id] = { name, price, quantity: 1 };
-            }
-
-            updateCartUI();
-            showToast(`Adicionado: ${name}`);
-        }
-
-        function removeFromCart(id) {
-            if (cart[id]) {
-                cart[id].quantity -= 1;
-                if (cart[id].quantity <= 0) {
-                    delete cart[id];
-                }
-            }
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            let totalItems = 0;
-            let totalPrice = 0;
-
-            for (const id in cart) {
-                totalItems += cart[id].quantity;
-                totalPrice += cart[id].price * cart[id].quantity;
-            }
-
-            const formattedTotal = `R$ ${totalPrice.toFixed(2).replace('.', ',')}`;
-
-            document.getElementById('cart-count').textContent = totalItems;
-            document.getElementById('cart-total').textContent = formattedTotal;
-
-            const cartBar = document.getElementById('cart-bar');
-            if (totalItems > 0) {
-                cartBar.classList.remove('translate-y-32');
-            } else {
-                cartBar.classList.add('translate-y-32');
-                closeCartModal();
-            }
-
-            document.getElementById('modal-subtotal').textContent = formattedTotal;
-            document.getElementById('modal-total').textContent = formattedTotal;
-
-            renderCartModalItems();
-        }
-
-        function renderCartModalItems() {
-            const listContainer = document.getElementById('cart-items-list');
-            listContainer.innerHTML = '';
-
-            if (Object.keys(cart).length === 0) {
-                listContainer.innerHTML = '<p class="text-center text-gray-500 text-xs py-4">Seu carrinho está vazio.</p>';
-                return;
-            }
-
-            for (const id in cart) {
-                const item = cart[id];
-                const itemTotal = `R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}`;
-
-                const row = document.createElement('div');
-                row.className = "flex items-center justify-between bg-[#242424] p-3 rounded-xl border border-zinc-800";
-                row.innerHTML = `
-                    <div class="flex-1 pr-2">
-                        <h4 class="font-bold text-xs text-gray-200 leading-tight">${item.name}</h4>
-                        <span class="text-xs font-black text-amber-400">${itemTotal}</span>
-                    </div>
-                    <div class="flex items-center space-x-2 bg-[#181818] px-2 py-1 rounded-lg border border-zinc-700">
-                        <button onclick="removeFromCart('${id}')" class="w-6 h-6 text-amber-400 font-bold flex items-center justify-center hover:bg-zinc-800 rounded">
-                            <i class="fa-solid fa-minus text-xs"></i>
-                        </button>
-                        <span class="font-bold text-xs text-white px-1">${item.quantity}</span>
-                        <button onclick="addToCart('${id}', '${item.name}', ${item.price})" class="w-6 h-6 text-amber-400 font-bold flex items-center justify-center hover:bg-zinc-800 rounded">
-                            <i class="fa-solid fa-plus text-xs"></i>
-                        </button>
-                    </div>
-                `;
-                listContainer.appendChild(row);
-            }
-        }
-
-        // --- CONTROLE MODAL ---
-        function openCartModal() {
-            const modal = document.getElementById('cart-modal');
-            const content = document.getElementById('cart-modal-content');
+        // BUSCA RÁPIDA DE PRODUTOS
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
             
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('translate-y-full');
-            }, 10);
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                if (name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
-        function closeCartModal() {
-            const modal = document.getElementById('cart-modal');
-            const content = document.getElementById('cart-modal-content');
+        // GERENCIAMENTO DO CARRINHO
+        let cart = [];
 
-            modal.classList.add('opacity-0');
-            content.classList.add('translate-y-full');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
+            updateCart();
         }
 
-        // --- ENVIO DO PEDIDO PARA O WHATSAPP ---
-        function sendOrderWhatsApp() {
-            if (Object.keys(cart).length === 0) return;
+        function updateCart() {
+            let total = 0;
+            let count = 0;
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                count += item.qty;
+            });
 
-            const name = document.getElementById('client-name').value.trim();
-            const address = document.getElementById('address-input').value.trim();
-            const complement = document.getElementById('address-complement').value.trim();
-            const payment = document.getElementById('payment-method').value;
-            const troco = document.getElementById('troco-input').value.trim();
-            const notes = document.getElementById('order-notes').value.trim();
+            document.getElementById('cartCount').innerText = count;
+            document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            document.getElementById('modalTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            renderCartItems();
+        }
 
-            if (!name) {
-                alert('Por favor, informe seu nome.');
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsContainer');
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="color:#aaa; text-align:center; padding: 15px;">Seu carrinho está vazio.</p>';
                 return;
             }
 
-            if (!address) {
-                alert('Por favor, informe o endereço de entrega.');
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div>
+                        <div>${item.name}</div>
+                        <small style="color:var(--primary)">R$ ${(item.price * item.qty).toFixed(2).replace('.', ',')}</small>
+                    </div>
+                    <div class="item-qty">
+                        <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                        <span>${item.qty}</span>
+                        <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCart();
+        }
+
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function toggleTroco() {
+            const payment = document.getElementById('paymentMethod').value;
+            document.getElementById('trocoGroup').style.display = payment === 'Dinheiro' ? 'block' : 'none';
+        }
+
+        function sendToWhatsApp() {
+            const name = document.getElementById('clientName').value.trim();
+            const address = document.getElementById('clientAddress').value.trim();
+            const payment = document.getElementById('paymentMethod').value;
+            const troco = document.getElementById('trocoValue').value.trim();
+
+            if (cart.length === 0) {
+                alert('Adicione produtos ao seu carrinho primeiro!');
+                return;
+            }
+            if (!name || !address) {
+                alert('Por favor, preencha seu Nome e Endereço!');
                 return;
             }
 
-            let message = `🍺 *NOVO PEDIDO - ADEGA MORAES* 🍺\n\n`;
-            message += `👤 *Cliente:* ${name}\n`;
-            message += `📍 *Endereço:* ${address}\n`;
-            if (complement) message += `🏡 *Complemento:* ${complement}\n`;
-            message += `----------------------------------\n`;
-            message += `🛒 *ITENS DO PEDIDO:*\n`;
+            let text = `*NOVO PEDIDO - ADEGA MORAES* 🍺\n\n`;
+            text += `*Cliente:* ${name}\n`;
+            text += `*Endereço:* ${address}\n`;
+            text += `*Forma de Pagamento:* ${payment}\n`;
+            if (payment === 'Dinheiro' && troco) {
+                text += `*Troco para:* ${troco}\n`;
+            }
+            text += `\n*ITENS DO PEDIDO:*\n`;
 
             let total = 0;
-            for (const id in cart) {
-                const item = cart[id];
-                const sub = item.price * item.quantity;
-                total += sub;
-                message += `• ${item.quantity}x ${item.name} - R$ ${sub.toFixed(2).replace('.', ',')}\n`;
-            }
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                text += `• ${item.qty}x ${item.name} - R$ ${itemTotal.toFixed(2).replace('.', ',')}\n`;
+            });
 
-            message += `----------------------------------\n`;
-            message += `💰 *TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}\n`;
-            message += `💳 *Forma de Pagamento:* ${payment}\n`;
+            text += `\n*TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}`;
 
-            if (payment === 'Dinheiro' && troco) {
-                message += `💵 *Troco para:* ${troco}\n`;
-            }
-
-            if (notes) {
-                message += `📝 *Obs:* ${notes}\n`;
-            }
-
-            message += `\n_Pedido gerado via Cardápio Digital Adega Moraes_`;
-
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${ADEGA_WHATSAPP}?text=${encodedMessage}`;
-
-            window.open(whatsappUrl, '_blank');
+            // Substitua o número abaixo pelo WhatsApp oficial da sua adega com DDD
+            const phone = "5511999999999";
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
 
-        // --- TOAST ---
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').textContent = msg;
-            
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            toast.classList.add('opacity-100');
-
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2000);
-        }
+        function id(el) { return document.getElementById(el); }
     </script>
 </body>
 </html>
