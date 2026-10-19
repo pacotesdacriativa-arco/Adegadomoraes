@@ -185,7 +185,7 @@
             border-color: var(--primary);
         }
 
-        /* PRODUTOS */
+        /* SEÇÕES & PRODUTOS */
         .section-title {
             font-size: 1.2rem;
             color: var(--primary);
@@ -292,7 +292,7 @@
             margin-top: 2px;
         }
 
-        /* CARRINHO */
+        /* CARRINHO FLUTUANTE */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -318,6 +318,7 @@
             font-size: 0.85rem;
         }
 
+        /* MODAL CHECKOUT */
         .modal {
             display: none;
             position: fixed;
@@ -426,22 +427,22 @@
     <!-- LOGO -->
     <header>
         <div class="logo-container">
-            <img src="a90128c5-3602-6c80-fafb-d88198c2a84a.jpeg" alt="Adega Moraes" class="logo-img" onerror="tryNextFormat(this, ['a90128c5-3602-6c80-fafb-d88198c2a84a.JPG', 'a90128c5-3602-6c80-fafb-d88198c2a84a.jpg', 'a90128c5-3602-6c80-fafb-d88198c2a84a.png'])">
+            <img src="a90128c5-3602-6c80-fafb-d88198c2a84a.jpeg" alt="Adega Moraes" class="logo-img">
             <div class="header-title">Adega Moraes</div>
         </div>
     </header>
 
-    <!-- CARROSSEL AUTOMÁTICO -->
+    <!-- CARROSSEL DE BANNERS -->
     <div class="carousel-container">
         <div class="carousel-track" id="carouselTrack">
             <div class="carousel-slide">
-                <img src="IMG_1271.jpeg" alt="Promoção 1" onerror="tryNextFormat(this, ['IMG_1271.JPG', 'IMG_1271.jpg', 'IMG_1271.png'])">
+                <img src="IMG_1271.jpeg" alt="Promoção 1">
             </div>
             <div class="carousel-slide">
-                <img src="IMG_1272.jpeg" alt="Promoção 2" onerror="tryNextFormat(this, ['IMG_1272.JPG', 'IMG_1272.jpg', 'IMG_1272.png'])">
+                <img src="IMG_1272.jpeg" alt="Promoção 2">
             </div>
             <div class="carousel-slide">
-                <img src="IMG_1273.jpeg" alt="Promoção 3" onerror="tryNextFormat(this, ['IMG_1273.JPG', 'IMG_1273.jpg', 'IMG_1273.png'])">
+                <img src="IMG_1273.jpeg" alt="Promoção 3">
             </div>
         </div>
         <div class="carousel-dots">
@@ -477,7 +478,7 @@
             <div class="products-grid">
                 <div class="product-card" data-name="Cerveja Heineken Long Neck 330ml">
                     <div class="product-img-container">
-                        <img src="IMG_1274.webp" alt="Heineken" onerror="tryNextFormat(this, ['IMG_1274.jpeg', 'IMG_1274.JPG', 'IMG_1274.jpg', 'IMG_1274.png'])">
+                        <img src="IMG_1274.webp" alt="Heineken">
                         <button class="add-btn" onclick="addToCart('Cerveja Heineken Long Neck 330ml', 8.50)">+</button>
                     </div>
                     <div class="product-info">
@@ -489,7 +490,7 @@
 
                 <div class="product-card" data-name="Cerveja Amstel Puro Malte 269ml">
                     <div class="product-img-container">
-                        <img src="IMG_1275.jpeg" alt="Amstel" onerror="tryNextFormat(this, ['IMG_1275.JPG', 'IMG_1275.jpg', 'IMG_1275.png'])">
+                        <img src="IMG_1275.jpeg" alt="Amstel">
                         <button class="add-btn" onclick="addToCart('Cerveja Amstel Puro Malte 269ml', 3.38)">+</button>
                     </div>
                     <div class="product-info">
@@ -501,7 +502,7 @@
 
                 <div class="product-card" data-name="Cerveja Original Lata 269ml">
                     <div class="product-img-container">
-                        <img src="IMG_1276.jpeg" alt="Original" onerror="tryNextFormat(this, ['IMG_1276.JPG', 'IMG_1276.jpg', 'IMG_1276.png'])">
+                        <img src="IMG_1276.webp" alt="Original">
                         <button class="add-btn" onclick="addToCart('Cerveja Original Lata 269ml', 4.50)">+</button>
                     </div>
                     <div class="product-info">
@@ -513,7 +514,7 @@
 
                 <div class="product-card" data-name="Cerveja Corona Extra 330ml">
                     <div class="product-img-container">
-                        <img src="IMG_1277.jpeg" alt="Corona" onerror="tryNextFormat(this, ['IMG_1277.JPG', 'IMG_1277.jpg', 'IMG_1277.png'])">
+                        <img src="IMG_1277.webp" alt="Corona">
                         <button class="add-btn" onclick="addToCart('Cerveja Corona Extra 330ml', 9.00)">+</button>
                     </div>
                     <div class="product-info">
@@ -525,7 +526,7 @@
 
                 <div class="product-card" data-name="Cerveja Budweiser 330ml">
                     <div class="product-img-container">
-                        <img src="IMG_1278.jpeg" alt="Budweiser" onerror="tryNextFormat(this, ['IMG_1278.JPG', 'IMG_1278.jpg', 'IMG_1278.png'])">
+                        <img src="IMG_1278.jpeg" alt="Budweiser">
                         <button class="add-btn" onclick="addToCart('Cerveja Budweiser 330ml', 7.50)">+</button>
                     </div>
                     <div class="product-info">
@@ -543,7 +544,7 @@
             <div class="products-grid">
                 <div class="product-card" data-name="Vinho Reservado Concha y Toro Cabernet 750ml">
                     <div class="product-img-container">
-                        <img src="IMG_1279.jpeg" alt="Concha y Toro" onerror="tryNextFormat(this, ['IMG_1279.JPG', 'IMG_1279.jpg', 'IMG_1279.png'])">
+                        <img src="IMG_1279.webp" alt="Concha y Toro">
                         <button class="add-btn" onclick="addToCart('Vinho Concha y Toro 750ml', 38.90)">+</button>
                     </div>
                     <div class="product-info">
@@ -555,7 +556,7 @@
 
                 <div class="product-card" data-name="Vinho Pérgola Tinto Suave 1 Litro">
                     <div class="product-img-container">
-                        <img src="IMG_1280.jpeg" alt="Pérgola" onerror="tryNextFormat(this, ['IMG_1280.JPG', 'IMG_1280.jpg', 'IMG_1280.png'])">
+                        <img src="IMG_1280.webp" alt="Pérgola">
                         <button class="add-btn" onclick="addToCart('Vinho Pérgola Tinto Suave 1L', 24.90)">+</button>
                     </div>
                     <div class="product-info">
@@ -567,8 +568,466 @@
 
                 <div class="product-card" data-name="Vinho Casillero del Diablo 750ml">
                     <div class="product-img-container">
-                        <img src="IMG_1282.jpeg" alt="Casillero del Diablo" onerror="tryNextFormat(this, ['IMG_1282.JPG', 'IMG_1282.jpg', 'IMG_1281.jpeg', 'IMG_1281.JPG', 'IMG_1281.jpg'])">
+                        <img src="IMG_1281.jpeg" alt="Casillero del Diablo">
                         <button class="add-btn" onclick="addToCart('Vinho Casillero del Diablo 750ml', 54.90)">+</button>
                     </div>
                     <div class="product-info">
-                        
+                        <div class="price-container"><span class="price">R$ 54,90</span></div>
+                        <div class="product-title">Vinho Casillero del Diablo 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Vinho Quinta do Morgado 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1282.webp" alt="Quinta do Morgado">
+                        <button class="add-btn" onclick="addToCart('Vinho Quinta do Morgado 750ml', 18.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 18,90</span></div>
+                        <div class="product-title">Vinho Quinta do Morgado Tinto Suave 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Vinho Gato Negro Malbec 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1283.jpeg" alt="Gato Negro">
+                        <button class="add-btn" onclick="addToCart('Vinho Gato Negro Malbec 750ml', 36.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 36,00</span></div>
+                        <div class="product-title">Vinho Gato Negro Malbec 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UÍSQUES -->
+        <div id="uisques">
+            <div class="section-title">Uísques</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Whisky Red Label 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1284.jpeg" alt="Red Label">
+                        <button class="add-btn" onclick="addToCart('Whisky Red Label 1L', 89.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 89,90</span></div>
+                        <div class="product-title">Whisky Red Label 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky Jack Daniels 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1285.webp" alt="Jack Daniels">
+                        <button class="add-btn" onclick="addToCart('Whisky Jack Daniels 1L', 149.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 149,90</span></div>
+                        <div class="product-title">Whisky Jack Daniel's 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky Black Label 12 Anos 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1286.webp" alt="Black Label">
+                        <button class="add-btn" onclick="addToCart('Whisky Black Label 12 Anos 1L', 179.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 179,90</span></div>
+                        <div class="product-title">Whisky Black Label 12 Anos 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky Ballantines 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1287.jpeg" alt="Ballantines">
+                        <button class="add-btn" onclick="addToCart('Whisky Ballantines 1L', 79.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 79,90</span></div>
+                        <div class="product-title">Whisky Ballantine's 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Whisky White Horse 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1288.jpeg" alt="White Horse">
+                        <button class="add-btn" onclick="addToCart('Whisky White Horse 1L', 69.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 69,90</span></div>
+                        <div class="product-title">Whisky White Horse 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GINS -->
+        <div id="gins">
+            <div class="section-title">Gins</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Gin Tanqueray London Dry 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1289.jpeg" alt="Tanqueray">
+                        <button class="add-btn" onclick="addToCart('Gin Tanqueray 750ml', 119.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 119,90</span></div>
+                        <div class="product-title">Gin Tanqueray London Dry 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Beefeater London Dry 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1290.jpeg" alt="Beefeater">
+                        <button class="add-btn" onclick="addToCart('Gin Beefeater 750ml', 99.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 99,90</span></div>
+                        <div class="product-title">Gin Beefeater London Dry 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Bombay Sapphire 750ml">
+                    <div class="product-img-container">
+                        <img src="IMG_1291.jpeg" alt="Bombay">
+                        <button class="add-btn" onclick="addToCart('Gin Bombay Sapphire 750ml', 129.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 129,90</span></div>
+                        <div class="product-title">Gin Bombay Sapphire 750ml</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Gordons London Dry">
+                    <div class="product-img-container">
+                        <img src="IMG_1292.jpeg" alt="Gordons">
+                        <button class="add-btn" onclick="addToCart('Gin Gordon\'s 750ml', 69.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 69,90</span></div>
+                        <div class="product-title">Gin Gordon's London Dry</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Gin Rocks Morango 1 Litro">
+                    <div class="product-img-container">
+                        <img src="IMG_1293.jpeg" alt="Gin Rocks">
+                        <button class="add-btn" onclick="addToCart('Gin Rocks Morango 1L', 39.90)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 39,90</span></div>
+                        <div class="product-title">Gin Rocks Flavored Morango 1 Litro</div>
+                        <div class="product-desc">Produto para maiores de 18 anos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NARGUILÉ -->
+        <div id="narguile">
+            <div class="section-title">Narguilé & Acessórios</div>
+            <div class="products-grid">
+                <div class="product-card" data-name="Caixa de Carvão Zomo 1kg">
+                    <div class="product-img-container">
+                        <img src="IMG_1294.jpeg" alt="Carvão Zomo">
+                        <button class="add-btn" onclick="addToCart('Caixa de Carvão Zomo 1kg', 32.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 32,00</span></div>
+                        <div class="product-title">Caixa de Carvão para Narguilé Zomo 1kg</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Carvão Solto 10un">
+                    <div class="product-img-container">
+                        <img src="IMG_1295.jpeg" alt="Carvão Solto">
+                        <button class="add-btn" onclick="addToCart('Carvão Solto (10un)', 5.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 5,00</span></div>
+                        <div class="product-title">Carvão para Narguilé Solto (10 unidades)</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Caixa de Alumínio Predator">
+                    <div class="product-img-container">
+                        <img src="IMG_1296.jpeg" alt="Alumínio Caixa">
+                        <button class="add-btn" onclick="addToCart('Caixa de Alumínio Predator', 18.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 18,00</span></div>
+                        <div class="product-title">Caixa de Alumínio Predator (50 folhas)</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Folha de Alumínio Unidade">
+                    <div class="product-img-container">
+                        <img src="IMG_1297.jpeg" alt="Folha Alumínio">
+                        <button class="add-btn" onclick="addToCart('Folha de Alumínio (Unidade)', 0.50)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 0,50</span></div>
+                        <div class="product-title">Folha de Alumínio para Narguilé (Unidade)</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Mangueira Silicone Narguilé">
+                    <div class="product-img-container">
+                        <img src="IMG_1298.jpeg" alt="Mangueira">
+                        <button class="add-btn" onclick="addToCart('Mangueira Silicone Narguilé', 25.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 25,00</span></div>
+                        <div class="product-title">Mangueira para Narguilé Lavável Silicone</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Pegador de Carvão Reforçado">
+                    <div class="product-img-container">
+                        <img src="IMG_1299.jpeg" alt="Pegador">
+                        <button class="add-btn" onclick="addToCart('Pegador de Carvão Reforçado', 12.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 12,00</span></div>
+                        <div class="product-title">Pegador de Carvão Grande Reforçado</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Forninho Acendedor Elétrico">
+                    <div class="product-img-container">
+                        <img src="IMG_1300.jpeg" alt="Forninho">
+                        <button class="add-btn" onclick="addToCart('Forninho Acendedor Elétrico', 45.00)">+</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="price-container"><span class="price">R$ 45,00</span></div>
+                        <div class="product-title">Forninho / Acendedor Elétrico de Carvão</div>
+                        <div class="product-desc">Acessórios Narguilé</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CARRINHO FLUTUANTE -->
+    <div class="cart-bar" onclick="openCart()">
+        <div>
+            <span class="cart-badge" id="cartCount">0</span>
+            <span style="margin-left: 8px;">Ver Pedido</span>
+        </div>
+        <div id="cartTotal">R$ 0,00</div>
+    </div>
+
+    <!-- MODAL DO CHECKOUT -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Seu Pedido - Adega Moraes</h3>
+                <span class="close-btn" onclick="closeCart()">&times;</span>
+            </div>
+
+            <div id="cartItemsContainer"></div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 15px; font-weight: bold; font-size: 1.1rem;">
+                <span>Total:</span>
+                <span id="modalTotal">R$ 0,00</span>
+            </div>
+
+            <div class="form-group">
+                <label>Seu Nome *</label>
+                <input type="text" id="clientName" placeholder="Ex: João Silva">
+            </div>
+
+            <div class="form-group">
+                <label>Endereço de Entrega *</label>
+                <input type="text" id="clientAddress" placeholder="Rua, Número, Bairro">
+            </div>
+
+            <div class="form-group">
+                <label>Forma de Pagamento *</label>
+                <select id="paymentMethod" onchange="toggleTroco()">
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão de Crédito/Débito">Cartão de Crédito/Débito</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="trocoGroup" style="display: none;">
+                <label>Precisa de troco para quanto?</label>
+                <input type="text" id="trocoValue" placeholder="Ex: R$ 50,00">
+            </div>
+
+            <button class="btn-whatsapp" onclick="sendToWhatsApp()">
+                <i class="fab fa-whatsapp"></i> Enviar Pedido no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        let currentSlide = 0;
+        const track = document.getElementById('carouselTrack');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+        setInterval(nextSlide, 3500);
+
+        function scrollToCategory(id) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                if (name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        let cart = [];
+
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            let total = 0;
+            let count = 0;
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                count += item.qty;
+            });
+
+            document.getElementById('cartCount').innerText = count;
+            document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            document.getElementById('modalTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsContainer');
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="color:#aaa; text-align:center; padding: 15px;">Seu carrinho está vazio.</p>';
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div>
+                        <div>${item.name}</div>
+                        <small style="color:var(--primary)">R$ ${(item.price * item.qty).toFixed(2).replace('.', ',')}</small>
+                    </div>
+                    <div class="item-qty">
+                        <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                        <span>${item.qty}</span>
+                        <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCart();
+        }
+
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function toggleTroco() {
+            const payment = document.getElementById('paymentMethod').value;
+            document.getElementById('trocoGroup').style.display = payment === 'Dinheiro' ? 'block' : 'none';
+        }
+
+        function sendToWhatsApp() {
+            const name = document.getElementById('clientName').value.trim();
+            const address = document.getElementById('clientAddress').value.trim();
+            const payment = document.getElementById('paymentMethod').value;
+            const troco = document.getElementById('trocoValue').value.trim();
+
+            if (cart.length === 0) {
+                alert('Adicione produtos ao seu carrinho primeiro!');
+                return;
+            }
+            if (!name || !address) {
+                alert('Por favor, preencha seu Nome e Endereço!');
+                return;
+            }
+
+            let text = `*NOVO PEDIDO - ADEGA MORAES* 🍺\n\n`;
+            text += `*Cliente:* ${name}\n`;
+            text += `*Endereço:* ${address}\n`;
+            text += `*Forma de Pagamento:* ${payment}\n`;
+            if (payment === 'Dinheiro' && troco) {
+                text += `*Troco para:* ${troco}\n`;
+            }
+            text += `\n*ITENS DO PEDIDO:*\n`;
+
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                text += `• ${item.qty}x ${item.name} - R$ ${itemTotal.toFixed(2).replace('.', ',')}\n`;
+            });
+
+            text += `\n*TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}`;
+
+            // Substitua pelo seu WhatsApp com DDD
+            const phone = "5511999999999";
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
